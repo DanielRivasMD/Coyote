@@ -1,6 +1,6 @@
 ### Milestones
-- cli architecture
-- raw file reader
+- cli architecture => to be improved
+- raw file reader => to be implemented
 - connection to database (possible SQLite)
 - database architecture
 - set up learning model: weights, training & penalties
