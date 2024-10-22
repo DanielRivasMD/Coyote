@@ -27,7 +27,7 @@ anyhow = "1.0.89"
 clap = "4.5.20"
 colored = "2.1.0"
 derive-new = "0.7.0"
-diesel = "2.2.4"
+diesel = { version = "2.2.4", features = ["sqlite"] }
 rand = "0.8.5"
 thiserror = "1.0.64"
 
