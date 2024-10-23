@@ -1,2 +1,5 @@
 # executable
 /target
+
+# database
+coyote.db
