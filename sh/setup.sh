@@ -27,3 +27,8 @@ diesel migration run
 diesel migration redo
 
 ####################################################################################################
+
+# generate sql source code
+diesel migration generate --diff-schema create_memory
+
+####################################################################################################
