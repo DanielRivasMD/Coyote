@@ -50,21 +50,3 @@ impl Flashcard {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// fn main() {
-//   let mut flashcard = Flashcard::new(1);
-
-//   // example usage: simulate user responses with different qualities
-//   let qualities = vec![5, 4, 3, 2, 5, 5];
-
-//   for (i, &quality) in qualities.iter().enumerate() {
-//     println!("Review {}: Quality={}", i + 1, quality);
-//     flashcard.update(quality);
-//     println!(
-//       "Repetitions: {}, Interval: {} days, Ease Factor: {:.2}",
-//       flashcard.repetitions, flashcard.interval, flashcard.ease_factor
-//     );
-//   }
-// }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
