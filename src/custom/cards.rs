@@ -1,16 +1,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct Flashcard {
-  id: u32,
-  ease_factor: f64,
-  interval: u32,
-  repetitions: u32,
+pub struct Flashcard {
+  pub id: u32,
+  pub ease_factor: f64,
+  pub interval: u32,
+  pub repetitions: u32,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 impl Flashcard {
-  fn new(id: u32) -> Self {
+  pub fn new(id: u32) -> Self {
     Flashcard {
       id,
       ease_factor: 2.5, // default ease factor
@@ -19,7 +19,7 @@ impl Flashcard {
     }
   }
 
-  fn update(&mut self, quality: u32) {
+  pub fn update(&mut self) {
     // ensure quality is in the range [0, 5]
     let quality = quality.min(5).max(0);
 
