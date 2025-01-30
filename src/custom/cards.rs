@@ -3,6 +3,7 @@
 #[derive(Debug)]
 pub struct Flashcard {
   pub id: u32,
+  // pub id: String,
   pub quality: u32,
   pub ease_factor: f64,
   pub interval: u32,
@@ -15,6 +16,7 @@ impl Flashcard {
   pub fn new(id: u32) -> Self {
     Flashcard {
       id,
+      // id: String::new(),
       quality: 0,       // initialize at zero
       ease_factor: 2.5, // default ease factor
       interval: 1,      // default interval
