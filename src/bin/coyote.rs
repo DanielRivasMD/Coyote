@@ -8,7 +8,7 @@ use coyote::*;
 // standard libraries
 use anyhow::Result as anyResult;
 use std::io;
-// use unicode_normalization::UnicodeNormalization;
+use unicode_normalization::UnicodeNormalization;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -18,48 +18,37 @@ use crate::custom::cards::Flashcard;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fn main() -> anyResult<()> {
-  let mut flashcard = Flashcard::new(1);
-
-  flashcard.id = 7;
-  // flashcard.id = "a".nfc().collect::<String>();
-
-  // // example usage: simulate user responses with different qualities
-  // let qualities = vec![5, 4, 3, 2, 5, 5];
+  let mut flashcard = Flashcard::new();
+  // hardcoded for debugging
+  flashcard.id = "a".nfc().collect::<String>();
 
   loop {
     let mut answer = String::new();
     io::stdin().read_line(&mut answer).expect("Failed to read");
 
-		let answer: u32 = match answer.trim().parse() {
-			Ok(num) => num,
-			Err(_) => {
-				println!("Please type a number!");
-				continue
-			},
-		};
+		answer = answer.trim().nfc().collect::<String>();
+    println!("You answered: {}", answer);
 
-		// answer = answer.nfc().collect::<String>();
-
-      println!("You answered: {}", answer);
-      println!("{:?}", flashcard);
-      println!("{}", flashcard.id == answer);
-
-      if flashcard.id == answer {
-        if flashcard.quality < 5 {
-          flashcard.quality += 1;
-          break;
-        } else {
-          if flashcard.quality > 0 {
-            flashcard.quality -= 1;
-          }
-        }
+    if flashcard.id == answer {
+      if flashcard.quality < 5 {
+        flashcard.quality += 1;
       }
+    } else {
+      println!("wrong!");
+      if flashcard.quality > 0 {
+        flashcard.quality -= 1;
+      }
+    }
 
     flashcard.update();
     println!(
-      "Repetitions: {}, Interval: {} days, Ease Factor: {:.2}",
-      flashcard.repetitions, flashcard.interval, flashcard.ease_factor
+      "Quality: {}, Repetitions: {}, Interval: {} days, Ease Factor: {:.2}",
+      flashcard.quality, flashcard.repetitions, flashcard.interval, flashcard.ease_factor
     );
+
+    if flashcard.quality == 5 {
+      break
+    }
   }
 
 	Ok(())
