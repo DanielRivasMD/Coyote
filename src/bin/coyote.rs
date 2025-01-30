@@ -8,6 +8,7 @@ use coyote::*;
 // standard libraries
 use anyhow::Result as anyResult;
 use std::io;
+// use unicode_normalization::UnicodeNormalization;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -20,6 +21,7 @@ fn main() -> anyResult<()> {
   let mut flashcard = Flashcard::new(1);
 
   flashcard.id = 7;
+  // flashcard.id = "a".nfc().collect::<String>();
 
   // // example usage: simulate user responses with different qualities
   // let qualities = vec![5, 4, 3, 2, 5, 5];
@@ -35,6 +37,8 @@ fn main() -> anyResult<()> {
 				continue
 			},
 		};
+
+		// answer = answer.nfc().collect::<String>();
 
       println!("You answered: {}", answer);
       println!("{:?}", flashcard);
