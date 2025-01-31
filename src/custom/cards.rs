@@ -1,12 +1,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#[derive(Debug)]
-pub struct Flashcard {
-  pub id: String,
-  pub quality: u32,
-  pub ease_factor: f64,
-  pub interval: u32,
-  pub repetitions: u32,
+#[derive(Debug, Default, Insertable)]
+#[diesel(table_name = memory)]
+pub struct Card {
+  pub word: String,
+  pub quality: String,
+  pub difficulty: String,
+  pub interval: String,
+  pub repetitions: String,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
