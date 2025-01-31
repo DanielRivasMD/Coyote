@@ -1,11 +1,14 @@
--- Your SQL goes here
-CREATE TABLE `memory`(
-	`id` INTEGER NOT NULL PRIMARY KEY,
-	`word` TEXT,
-	`kind` TEXT,
-	`score` INTEGER,
-	`stability` INTEGER,
-	`retrievability` INTEGER,
-	`difficulty` INTEGER
+----------------------------------------------------------------------------------------------------
+-- database architecture
+----------------------------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS memory (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  word TEXT,
+  kind TEXT,
+  quality TEXT,
+  difficulty TEXT,
+  interval TEXT,
+  repetitions TEXT
 );
 
+----------------------------------------------------------------------------------------------------
