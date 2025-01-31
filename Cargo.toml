@@ -24,13 +24,12 @@ path = "src/coyote.rs"
 
 [dependencies]
 anyhow = "1.0.89"
-clap = "4.5.20"
+clap = { version = "4.4.3", features = ["derive"] }
 colored = "2.1.0"
 derive-new = "0.7.0"
-diesel = { version = "2.2.4", features = ["sqlite"] }
-rand = "0.8.5"
+diesel = { version = "2.2.4", features = ["sqlite", "returning_clauses_for_sqlite_3_35"] }
+dotenvy = "0.15"
 thiserror = "1.0.64"
-unicode-normalization = "0.1.24"
 
 
 [profile.dev]
