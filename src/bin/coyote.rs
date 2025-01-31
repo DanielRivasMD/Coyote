@@ -19,6 +19,7 @@ use crate::utils::sql::*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// TODO: split subcommands
 fn main() -> anyResult<()> {
   // collect command line arguments
   let params = Cli::parse();
