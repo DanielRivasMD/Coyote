@@ -24,6 +24,7 @@ path = "src/coyote.rs"
 
 [dependencies]
 anyhow = "1.0.89"
+bytelines = "2.5.0"
 clap = { version = "4.4.3", features = ["derive"] }
 colored = "2.1.0"
 derive-new = "0.7.0"
