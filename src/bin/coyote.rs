@@ -12,7 +12,7 @@ use clap::Parser;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::custom::cards::Card;
+// use crate::custom::cards::Card;
 use crate::utils::reader::*;
 use crate::utils::help::*;
 use crate::utils::sql::*;
@@ -25,31 +25,9 @@ fn main() -> anyResult<()> {
   let params = Cli::parse();
 
   // open database connection
-  let mut conn = establish_db_connection()?;
+  let conn = establish_db_connection()?;
 
-  // get path
-  let file = params.input;
-
-  // read input
-  let mut lines = byte_file_reader(file)?;
-
-  // TODO: migrate to function
-  // iterate on lines
-  while let Some(line) = lines.next() {
-
-    // read line
-    let line_read = String::from_utf8_lossy(line?);
-    let fields = line_read.split(',').collect::<Vec<&str>>();
-
-    // TODO: migrate to method
-    let mut card = Card::new();
-
-    card.word = fields[0].to_string().clone();
-
-    // insert to database
-    insert_insertable_struct(card, &mut conn)?;
-
-  }
+  reader(params.input, conn)?;
 
   // let mut flashcard = Card::new();
   // // hardcoded for debugging
