@@ -4,6 +4,8 @@ diesel::table! {
   memory {
     id -> Integer,
     word -> Text,
+    example -> Text,
+    misc -> Text,
     kind -> Text,
     quality -> Text,
     difficulty -> Text,
