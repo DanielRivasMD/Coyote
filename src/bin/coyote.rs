@@ -12,7 +12,6 @@ use clap::Parser;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-// use crate::custom::cards::Card;
 use crate::utils::reader::*;
 use crate::utils::help::*;
 use crate::utils::sql::*;

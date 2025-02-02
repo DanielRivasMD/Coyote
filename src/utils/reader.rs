@@ -20,6 +20,7 @@ use crate::utils::error::CoyoteError;
 // crate utilities
 use crate::utils::sql::insert_insertable_struct;
 use crate::custom::cards::Card;
+use crate::utils::traits::StringLoader;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -50,6 +51,8 @@ pub fn reader(file: PathBuf, mut conn: SqliteConnection) -> anyResult<()> {
     let fields = line_read.split(',').collect::<Vec<&str>>();
 
     // TODO: migrate to method
+    // load from line
+    let card = Card::load_from_str(fields.clone());
     let mut card = Card::new();
 
     card.word = fields[0].to_string().clone();
