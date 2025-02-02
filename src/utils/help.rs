@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use clap::Parser;
+use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,13 +14,29 @@ use crate::custom::log_flag::LogFlag;
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
+  #[command(subcommand)]
+  pub command: Commands,
+
   /// Logging level
   #[arg(short, long, value_enum, default_value_t = LogFlag::Info)]
   pub log: LogFlag,
 
-  /// Input file
-  #[arg(long)]
-  pub input: PathBuf,
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#[derive(Subcommand)]
+pub enum Commands {
+    /// Train your skills
+    Train {
+    },
+
+    /// Load data for training from file
+    Load {
+      /// Input file
+      #[arg(long)]
+      input: PathBuf,
+    },
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
