@@ -1,5 +1,42 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/// Talus
+/// In Greek mythology, Talos — also spelled Talus (/ˈteɪlɒs/; Greek: Τάλως,
+/// Tálōs) or Talon (/ˈteɪlɒn, ən/; Greek: Τάλων, Tálōn) — was a giant automaton
+/// made of bronze to protect Europa in Crete from pirates and invaders. He
+/// circled the island's shores three times daily.
+/// Creates builder traits
+#[macro_export]
+macro_rules! talus {
+  (
+    $vis: vis,
+    $trt: ident;
+    $load: ident, $updt: ident - $ty: ty
+  ) => {
+      $vis trait $trt {
+        fn new_wrap() -> Self;
+
+        fn $load(input: $ty) -> anyResult<Self>
+        where
+          Self: Sized,
+        {
+          let mut novo = Self::new_wrap();
+
+          novo.$updt(input)?;
+
+          Ok(novo)
+        }
+
+        fn $updt(
+          &mut self,
+          flines: $ty,
+        ) -> anyResult<()>;
+      }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /// Daedalus
 /// In Greek mythology, Daedalus (UK: /ˈdiːdələs/, US: /ˈdɛdələs/; Greek:
 /// Δαίδαλος; Latin: Daedalus; Etruscan: Taitale) was a skillful architect and
