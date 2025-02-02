@@ -50,12 +50,8 @@ pub fn reader(file: PathBuf, mut conn: SqliteConnection) -> anyResult<()> {
     let line_read = String::from_utf8_lossy(line?);
     let fields = line_read.split(',').collect::<Vec<&str>>();
 
-    // TODO: migrate to method
     // load from line
-    let card = Card::load_from_str(fields.clone());
-    let mut card = Card::new();
-
-    card.word = fields[0].to_string().clone();
+    let card = Card::load_from_str(fields.clone())?;
 
     // insert to database
     insert_insertable_struct(card, &mut conn)?;
