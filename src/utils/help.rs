@@ -1,7 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use clap::{Parser, Subcommand};
+use clap::{
+  Parser,
+  Subcommand,
+};
 use std::path::PathBuf;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,23 +23,21 @@ pub struct Cli {
   /// Logging level
   #[arg(short, long, value_enum, default_value_t = LogFlag::Info)]
   pub log: LogFlag,
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #[derive(Subcommand)]
 pub enum Commands {
-    /// Train your skills
-    Train {
-    },
+  /// Train your skills
+  Train {},
 
-    /// Load data for training from file
-    Load {
-      /// Input file
-      #[arg(long)]
-      input: PathBuf,
-    },
+  /// Load data for training from file
+  Load {
+    /// Input file
+    #[arg(long)]
+    input: PathBuf,
+  },
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

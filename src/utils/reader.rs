@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use anyhow::Result as anyResult;
-use anyhow::Context;
-use bytelines::ByteLines;
-use bytelines::ByteLinesReader;
+use anyhow::{
+  Context,
+  Result as anyResult,
+};
+use bytelines::{
+  ByteLines,
+  ByteLinesReader,
+};
 use diesel::SqliteConnection;
-use std::fs::File;
-use std::io::BufReader;
-use std::path::PathBuf;
+use std::{
+  fs::File,
+  io::BufReader,
+  path::PathBuf,
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -18,17 +24,20 @@ use crate::utils::error::CoyoteError;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::utils::sql::insert_insertable_struct;
-use crate::custom::cards::Card;
-use crate::utils::traits::StringLoader;
+use crate::{
+  custom::cards::Card,
+  utils::{
+    sql::insert_insertable_struct,
+    traits::StringLoader,
+  },
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fn byte_file_reader(input_file: PathBuf) -> anyResult<ByteLines<BufReader<File>>> {
-  let file =
-    File::open(&input_file).context(CoyoteError::ReadFile {
-      f: input_file.into(),
-    })?;
+  let file = File::open(&input_file).context(CoyoteError::ReadFile {
+    f: input_file.into(),
+  })?;
 
   let reader = BufReader::new(file);
 
@@ -38,14 +47,15 @@ fn byte_file_reader(input_file: PathBuf) -> anyResult<ByteLines<BufReader<File>>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub fn reader(file: PathBuf, mut conn: SqliteConnection) -> anyResult<()> {
-
+pub fn reader(
+  file: PathBuf,
+  mut conn: SqliteConnection,
+) -> anyResult<()> {
   // read input
   let mut lines = byte_file_reader(file)?;
 
   // iterate on lines
   while let Some(line) = lines.next() {
-
     // read line
     let line_read = String::from_utf8_lossy(line?);
     let fields = line_read.split(',').collect::<Vec<&str>>();
@@ -59,6 +69,5 @@ pub fn reader(file: PathBuf, mut conn: SqliteConnection) -> anyResult<()> {
 
   Ok(())
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

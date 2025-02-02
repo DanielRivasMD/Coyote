@@ -8,10 +8,10 @@ use clap::ValueEnum;
 /// logging options from command line arguments
 #[derive(Clone, Debug, Eq, PartialEq, ValueEnum)]
 pub enum LogFlag {
-    Info,
-    Debug,
-    Warn,
-    Error,
+  Info,
+  Debug,
+  Warn,
+  Error,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
