@@ -32,6 +32,9 @@ pub enum CoyoteError {
 
   #[error("\n{}: {f:?}\n", "Could not load input".red())]
   Loading { f: String },
+
+  #[error("\n{}: {f:?}\n", "".red())]
+  DatabaseConnection { f: String },
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

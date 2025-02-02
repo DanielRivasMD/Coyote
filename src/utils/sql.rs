@@ -8,6 +8,10 @@ use diesel::{
   sqlite::SqliteConnection,
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// error handler
+use crate::utils::error::CoyoteError;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -22,8 +26,10 @@ use crate::custom::{
 pub fn establish_db_connection() -> anyResult<SqliteConnection> {
   let db_path = get_db_path()?.clone();
 
-    Ok(SqliteConnection::establish(db_path.as_str())
-        .unwrap_or_else(|_| panic!("Error connecting to {}", db_path)))
+  Ok(
+    SqliteConnection::establish(db_path.as_str())
+        .context(CoyoteError::DatabaseConnection { f: db_path })?
+  )
 }
 
 pub fn insert_insertable_struct(
