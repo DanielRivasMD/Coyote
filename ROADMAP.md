@@ -1,10 +1,12 @@
 ### Milestones
-- wip   cli architecture
+- done  cli architecture
 - done  raw file reader
 - done  connection to database (possible SQLite)
 - done  database architecture
 - done  set up learning model: weights, training & penalties
-- wip   custom datatypes for model
-- wip   store values & prompt
+- done  custom datatypes for model
+- done  store values & prompt
+- wip   promt questions & examples from database
+- wip   retrieve & compare appropiate values
 - todo  randomizer
 - todo  render to browser & mobile (possible Dioxis)
