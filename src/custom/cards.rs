@@ -9,6 +9,7 @@ use diesel::prelude::*;
 // crate utilities
 use crate::daedalus;
 use crate::custom::schema::*;
+use crate::utils::traits::StringLoader;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -61,6 +62,24 @@ impl Card {
   // fn next_review_in_days(&self) -> u32 {
   //   self.interval
   // }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+impl StringLoader for Card {
+  fn new_wrap() -> Self {
+    Self::new()
+  }
+
+  fn update_from_str(
+    &mut self,
+    fields: Vec<&str>,
+  ) -> anyResult<()> {
+
+    //
+    self.update_word(fields[0].into())?;
+    Ok(())
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
