@@ -2,6 +2,7 @@
 
 // modules
 pub mod error;
+pub mod macros;
 pub mod help;
 pub mod reader;
 pub mod sql;
