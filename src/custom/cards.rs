@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-// use anyhow::Result as anyResult;
+use anyhow::Result as anyResult;
 use diesel::prelude::*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -11,29 +11,28 @@ use crate::custom::schema::*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#[derive(Debug, Default, Insertable)]
+#[derive(Debug, Default, Insertable, new)]
 #[diesel(table_name = memory)]
 pub struct Card {
+  #[new(default)]
   pub word: String,
+
+  #[new(value = "String::from(\"0\")")]
   pub quality: String,
+
+  #[new(value = "String::from(\"2.5\")")]
   pub difficulty: String,
+
+  #[new(value = "String::from(\"1\")")]
   pub interval: String,
+
+  #[new(value = "String::from(\"0\")")]
   pub repetitions: String,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 impl Card {
-  pub fn new() -> Self {
-    Card {
-      word: String::new(),
-      quality: "0".to_string(),                      // initialize at zero
-      difficulty: "2.5".to_string(),                 // default ease factor
-      interval: "1".to_string(),                     // default interval
-      repetitions: "0".to_string(),                  // no repetitions initially
-    }
-  }
-
   pub fn update(&mut self) {
 
     // quality is locked between 0 - 5
