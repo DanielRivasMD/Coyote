@@ -8,7 +8,6 @@ use coyote::*;
 // standard libraries
 use anyhow::Result as anyResult;
 use clap::Parser;
-use std::io;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,27 +15,22 @@ use std::io;
 use crate::utils::reader::*;
 use crate::utils::help::*;
 use crate::utils::sql::*;
-use crate::custom::cards::Card;
-use coyote::custom::train::train;
+use crate::cmds::train::train;
+use crate::cmds::load::load;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fn main() -> anyResult<()> {
-
   // collect command line arguments
   let params = Cli::parse();
 
   match &params.command {
     Commands::Load { input } => {
-
-      // open database connection
-      let conn = establish_db_connection()?;
-
-      reader(input.to_path_buf(), conn)?;
+      load(input)?;
     }
 
     Commands::Train {  } => {
-      let _ = train();
+      train()?;
     }
   }
 
