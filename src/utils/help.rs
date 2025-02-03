@@ -29,8 +29,9 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Commands {
-  /// Train your skills
-  Train {},
+
+  /// Read input from user for training
+  Read {},
 
   /// Load data for training from file
   Load {
@@ -38,6 +39,9 @@ pub enum Commands {
     #[arg(long)]
     input: PathBuf,
   },
+
+  /// Train your skills
+  Train {},
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

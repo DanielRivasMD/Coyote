@@ -12,11 +12,10 @@ use clap::Parser;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::utils::reader::*;
 use crate::utils::help::*;
-use crate::utils::sql::*;
 use crate::cmds::train::train;
 use crate::cmds::load::load;
+use crate::cmds::read::read;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,6 +24,10 @@ fn main() -> anyResult<()> {
   let params = Cli::parse();
 
   match &params.command {
+    Commands::Read {  } => {
+      read()?;
+    }
+
     Commands::Load { input } => {
       load(input)?;
     }
