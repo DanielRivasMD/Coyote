@@ -23,16 +23,11 @@ use crate::custom::cards::*;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 pub fn train() -> anyResult<()> {
-  // // retrieve from database
-  // let cards = get_memory()?;
-
+  // set connection
   let conn = &mut set_conn_db()?;
-  let cards: Vec<Card> = memory
-    // .filter(difficulty.eq("2.5"))
-    // .select((item, example, misc, quality, difficulty, interval, repetitions))
-    .select(Card::as_select())
-    .load::<Card>(conn)
-    .context(CoyoteError::DatabaseLoad)?;
+
+  // retrieve from database
+  let cards = get_memory(conn)?;
 
   // iterate on data
   for card in cards {
