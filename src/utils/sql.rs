@@ -38,7 +38,7 @@ pub fn establish_db_connection() -> anyResult<SqliteConnection> {
   let db_path = get_db_path()?.clone();
   // dotenv().ok();
   // let database_url = env::var("DATABASE_URL")
-  // .expect("DATABASE_URL must be set");
+  // .context(CoyoteError::DatabaseEnv { f: "DATABASE_URL".to_string() })?;
 
   Ok(
     SqliteConnection::establish(db_path.as_str()).context(CoyoteError::DatabaseConnection {
@@ -59,13 +59,13 @@ pub fn insert_insertable_struct(
 
 // retrieve all records from database
 pub fn get_memory() -> anyResult<Vec<Card>> {
-  let conn = &mut establish_db_connection().unwrap();
+  let conn = &mut establish_db_connection()?;
   let results: Vec<Card> = memory
     // .filter(difficulty.eq("2.5"))
     // .select((item, example, misc, quality, difficulty, interval, repetitions))
     .select(Card::as_select())
     .load::<Card>(conn)
-    .expect("Error loading users");
+    .context(CoyoteError::DatabaseLoad)?;
 
   Ok(results)
 }

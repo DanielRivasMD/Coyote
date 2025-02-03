@@ -28,14 +28,17 @@ pub enum CoyoteError {
   #[error("\n{}: {f:?}\n", "Fail to parse flag".red())]
   ParseFlag { f: String },
 
-  #[error("\n{}\n", "Fail to read lines".red())]
+  #[error("\n{}\n", "Fail to read line".red())]
   RegistryLine,
 
-  #[error("\n{}: {f:?}\n", "Could not load input".red())]
-  Loading { f: String },
-
-  #[error("\n{}: {f:?}\n", "".red())]
+  #[error("\n{}: {f:?}\n", "Error connecting to database".red())]
   DatabaseConnection { f: String },
+
+  #[error("\n{}: {f:?}\n", "Error with database address from `env`".red())]
+  DatabaseEnv { f: String },
+
+  #[error("\n{}\n", "Error loading data".red())]
+  DatabaseLoad,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
