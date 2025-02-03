@@ -12,15 +12,16 @@ use serde::{
 
 // crate utilities
 use crate::{
-  custom::schema::*,
+  custom::schema::memory as memory_table,
   daedalus,
   utils::traits::StringLoader,
 };
+use crate::custom::schema::memory::dsl::*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #[derive(new, Debug, Default, Insertable, Queryable, Selectable, Serialize, Deserialize)]
-#[diesel(table_name = memory)]
+#[diesel(table_name = memory_table)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Card {
   #[new(default)]
@@ -80,6 +81,18 @@ impl Card {
   // fn next_review_in_days(&self) -> u32 {
   //   self.interval
   // }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+impl Card {
+  pub fn update_quality<F>(&mut self, conn: &mut SqliteConnection, q: f64, i: f64, f: F) where F: Fn(f64, f64) -> f64 {
+    diesel::update(memory.filter(item.eq(self.item.clone())))
+      .set(quality.eq(f(q, i).to_string()))
+      .returning(Card::as_returning())
+      .get_result(conn)
+      .unwrap();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
