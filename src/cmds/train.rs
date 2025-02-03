@@ -1,29 +1,39 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use anyhow::Result as anyResult;
+use anyhow::{
+  Context,
+  Result as anyResult,
+};
 use std::io;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::{
-  custom::cards::Card,
-  utils::sql::*,
+use crate::utils::{
+  error::CoyoteError,
+  sql::*,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 pub fn train() -> anyResult<()> {
+  // retrieve from database
   let cards = get_memory()?;
+
+  // iterate on data
   for card in cards {
     println!("{}", card.item);
     println!("{}", card.example);
 
+    // capture user input
     let mut answer = String::new();
-    io::stdin().read_line(&mut answer).expect("Failed to read");
-
+    io::stdin()
+      .read_line(&mut answer)
+      .context(CoyoteError::RegistryLine)?;
     answer = answer.trim().to_string();
+
+    // display answers
     println!("You answered: {}", answer);
     println!("{}", answer == card.item);
 
