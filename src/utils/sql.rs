@@ -30,8 +30,9 @@ use crate::custom::{
 
 pub fn establish_db_connection() -> anyResult<SqliteConnection> {
   dotenv().ok();
-  let db_path = env::var("DATABASE_URL")
-  .context(CoyoteError::DatabaseEnv { f: "DATABASE_URL".to_string() })?;
+  let db_path = env::var("DATABASE_URL").context(CoyoteError::DatabaseEnv {
+    f: "DATABASE_URL".to_string(),
+  })?;
 
   Ok(
     SqliteConnection::establish(db_path.as_str()).context(CoyoteError::DatabaseConnection {

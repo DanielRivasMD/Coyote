@@ -29,7 +29,6 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Commands {
-
   /// Read input from user for training
   Read {},
 
