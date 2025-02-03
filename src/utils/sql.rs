@@ -1,12 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use anyhow::{Context, Result as anyResult};
+use anyhow::{
+  Context,
+  Result as anyResult,
+};
 use diesel::{
   insert_into,
   prelude::*,
   sqlite::SqliteConnection,
 };
+use dotenvy::dotenv;
+use std::env;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,12 +28,21 @@ use crate::custom::{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// DOC: hardcoded variable
+// TODO: use env variable
+fn get_db_path() -> anyResult<String> {
+  Ok("coyote.db".to_string())
+}
+
 pub fn establish_db_connection() -> anyResult<SqliteConnection> {
   let db_path = get_db_path()?.clone();
+  // dotenv().ok();
+  // let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
   Ok(
-    SqliteConnection::establish(db_path.as_str())
-        .context(CoyoteError::DatabaseConnection { f: db_path })?
+    SqliteConnection::establish(db_path.as_str()).context(CoyoteError::DatabaseConnection {
+      f: db_path,
+    })?,
   )
 }
 
@@ -42,10 +56,6 @@ pub fn insert_insertable_struct(
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// DOC: hardcoded variable
-// TODO: cli arg?
-fn get_db_path() -> anyResult<String> {
-  Ok("coyote.db".to_string())
 // retrieve all records from database
 pub fn get_memory() -> anyResult<Vec<Card>> {
   let conn = &mut establish_db_connection().unwrap();

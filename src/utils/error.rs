@@ -7,6 +7,7 @@ use thiserror::Error;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// TODO: use context error
 #[derive(Debug, Error)]
 pub enum CoyoteError {
   #[error("\n{}: {f:?}\n", "Fail to create file".red())]
