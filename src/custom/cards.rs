@@ -3,6 +3,7 @@
 // standard libraries
 use anyhow::Result as anyResult;
 use diesel::prelude::*;
+use serde::{Serialize, Deserialize};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,8 +16,12 @@ use crate::{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#[derive(Debug, Default, Insertable, new)]
+#[derive(new)]
+#[derive(Debug, Default)]
+#[derive(Insertable, Queryable, Selectable)]
+#[derive(Serialize, Deserialize)]
 #[diesel(table_name = memory)]
+#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Card {
   #[new(default)]
   pub item: String,
