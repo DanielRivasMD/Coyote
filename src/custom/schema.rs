@@ -3,7 +3,7 @@
 diesel::table! {
   memory {
     id -> Integer,
-    word -> Text,
+    item -> Text,
     example -> Text,
     misc -> Text,
     kind -> Text,

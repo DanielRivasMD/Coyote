@@ -19,7 +19,7 @@ use crate::{
 #[diesel(table_name = memory)]
 pub struct Card {
   #[new(default)]
-  pub word: String,
+  pub item: String,
 
   #[new(default)]
   pub example: String,
@@ -89,7 +89,7 @@ impl StringLoader for Card {
     fields: Vec<&str>,
   ) -> anyResult<()> {
     // update fields
-    self.update_word(fields[0].into())?;
+    self.update_item(fields[0].into())?;
     self.update_misc(fields[1].into())?;
     self.update_example(fields[2].into())?;
     Ok(())
@@ -101,7 +101,7 @@ impl StringLoader for Card {
 // automatic interactive method implementation through daedalus
 daedalus!(
   pub, Card;
-  word; get_word_owned, get_word_ref, update_word - String, &str
+  item; get_item_owned, get_item_ref, update_item - String, &str
   example; get_example_owned, get_example_ref, update_example - String, &str
   misc; get_misc_owned, get_misc_ref, update_misc - String, &str
 );

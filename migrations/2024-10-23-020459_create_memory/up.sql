@@ -3,7 +3,7 @@
 ----------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS memory (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  word TEXT,
+  item TEXT,
   example TEXT,
   misc TEXT,
   kind TEXT,
