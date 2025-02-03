@@ -28,7 +28,7 @@ use crate::custom::{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub fn establish_db_connection() -> anyResult<SqliteConnection> {
+pub fn set_conn_db() -> anyResult<SqliteConnection> {
   dotenv().ok();
   let db_path = env::var("DATABASE_URL").context(CoyoteError::DatabaseEnv {
     f: "DATABASE_URL".to_string(),
@@ -41,7 +41,9 @@ pub fn establish_db_connection() -> anyResult<SqliteConnection> {
   )
 }
 
-pub fn insert_insertable_struct(
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+pub fn insert_struct(
   card: Card,
   conn: &mut SqliteConnection,
 ) -> anyResult<()> {
@@ -53,7 +55,7 @@ pub fn insert_insertable_struct(
 
 // retrieve all records from database
 pub fn get_memory() -> anyResult<Vec<Card>> {
-  let conn = &mut establish_db_connection()?;
+  let conn = &mut set_conn_db()?;
   let results: Vec<Card> = memory
     // .filter(difficulty.eq("2.5"))
     // .select((item, example, misc, quality, difficulty, interval, repetitions))

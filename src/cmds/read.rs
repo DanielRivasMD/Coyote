@@ -20,18 +20,19 @@ use crate::utils::error::CoyoteError;
 // crate utilities
 use crate::{
   custom::cards::Card,
-  utils::sql::*,
+  utils::sql::{set_conn_db, insert_struct},
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 pub fn read() -> anyResult<()> {
   // open database connection
-  let mut conn = establish_db_connection()?;
+  let mut conn = set_conn_db()?;
 
   // initialize card
   let mut card = Card::new();
 
+    // initialize holders
   let mut item = String::new();
   let mut misc = String::new();
 
@@ -48,7 +49,7 @@ pub fn read() -> anyResult<()> {
   card.misc = misc;
 
   // insert to database
-  insert_insertable_struct(card, &mut conn)?;
+  insert_struct(card, &mut conn)?;
 
   Ok(())
 }

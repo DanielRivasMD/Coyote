@@ -23,6 +23,7 @@ fn main() -> anyResult<()> {
   // collect command line arguments
   let params = Cli::parse();
 
+  // match sub commands
   match &params.command {
     Commands::Read {  } => {
       read()?;
