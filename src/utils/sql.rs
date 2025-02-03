@@ -37,7 +37,8 @@ fn get_db_path() -> anyResult<String> {
 pub fn establish_db_connection() -> anyResult<SqliteConnection> {
   let db_path = get_db_path()?.clone();
   // dotenv().ok();
-  // let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+  // let database_url = env::var("DATABASE_URL")
+  // .expect("DATABASE_URL must be set");
 
   Ok(
     SqliteConnection::establish(db_path.as_str()).context(CoyoteError::DatabaseConnection {

@@ -3,7 +3,10 @@
 // standard libraries
 use anyhow::Result as anyResult;
 use diesel::prelude::*;
-use serde::{Serialize, Deserialize};
+use serde::{
+  Deserialize,
+  Serialize,
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,10 +19,7 @@ use crate::{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#[derive(new)]
-#[derive(Debug, Default)]
-#[derive(Insertable, Queryable, Selectable)]
-#[derive(Serialize, Deserialize)]
+#[derive(new, Debug, Default, Insertable, Queryable, Selectable, Serialize, Deserialize)]
 #[diesel(table_name = memory)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Card {
