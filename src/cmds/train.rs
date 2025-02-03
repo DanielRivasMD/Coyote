@@ -5,7 +5,6 @@ use anyhow::{
   Context,
   Result as anyResult,
 };
-use diesel::prelude::*;
 use std::io;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,8 +16,6 @@ use crate::utils::error::CoyoteError;
 
 // crate utilities
 use crate::utils::sql::*;
-use crate::custom::schema::memory::dsl::*;
-use crate::custom::cards::*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,7 +27,7 @@ pub fn train() -> anyResult<()> {
   let cards = get_memory(conn)?;
 
   // iterate on data
-  for card in cards {
+  for mut card in cards {
     println!("{}", card.item);
     println!("{}", card.example);
 
@@ -45,32 +42,23 @@ pub fn train() -> anyResult<()> {
     println!("You answered: {}", answer);
     println!("{}", answer == card.item);
 
-    // TODO: refactor to function
     if card.item == answer {
       println!("correct!");
       if card.quality.parse::<f64>().unwrap() < 5. {
-        diesel::update(memory.filter(item.eq(card.item)))
-          .set(quality.eq((card.quality.parse::<f64>().unwrap() + 1.).to_string()))
-          .returning(Card::as_returning())
-          .get_result(conn)
-          .unwrap();
+        card.update_quality(conn, card.quality.parse::<f64>().unwrap(), 1., |q, i| q + i );
       }
     } else {
       println!("wrong!");
       if card.quality.parse::<f64>().unwrap() > 0. {
-        diesel::update(memory.filter(item.eq(card.item)))
-          .set(quality.eq((card.quality.parse::<f64>().unwrap() - 1.).to_string()))
-          .returning(Card::as_returning())
-          .get_result(conn)
-          .unwrap();
+        card.update_quality(conn, card.quality.parse::<f64>().unwrap(), 1., |q, i| q - i );
       }
     }
 
     // card.update();
-    // println!(
-    //   "Quality: {}, Repetitions: {}, Interval: {} days, Ease Factor: {:.2}",
-    //   card.quality, card.repetitions, card.interval, card.difficulty
-    // );
+    println!(
+      "Quality: {}, Repetitions: {}, Interval: {} days, Ease Factor: {:.2}",
+      card.quality, card.repetitions, card.interval, card.difficulty
+    );
   }
 
   Ok(())
