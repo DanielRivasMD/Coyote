@@ -5,6 +5,7 @@ use anyhow::{
   Context,
   Result as anyResult,
 };
+use diesel::prelude::*;
 use std::io;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -15,13 +16,23 @@ use crate::utils::error::CoyoteError;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::utils::sql::get_memory;
+use crate::utils::sql::*;
+use crate::custom::schema::memory::dsl::*;
+use crate::custom::cards::*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 pub fn train() -> anyResult<()> {
-  // retrieve from database
-  let cards = get_memory()?;
+  // // retrieve from database
+  // let cards = get_memory()?;
+
+  let conn = &mut set_conn_db()?;
+  let cards: Vec<Card> = memory
+    // .filter(difficulty.eq("2.5"))
+    // .select((item, example, misc, quality, difficulty, interval, repetitions))
+    .select(Card::as_select())
+    .load::<Card>(conn)
+    .context(CoyoteError::DatabaseLoad)?;
 
   // iterate on data
   for card in cards {
@@ -39,17 +50,26 @@ pub fn train() -> anyResult<()> {
     println!("You answered: {}", answer);
     println!("{}", answer == card.item);
 
-    // TODO: update values & upload on database
-    // if card.item == answer {
-    //   if card.quality.parse::<f64>().unwrap() < 5. {
-    //     card.quality = (card.quality.parse::<f64>().unwrap() +
-    // 1.).to_string();   }
-    // } else {
-    //   println!("wrong!");
-    //   if card.quality.parse::<f64>().unwrap() > 0. {
-    //     card.quality = (card.quality.parse::<f64>().unwrap() -
-    // 1.).to_string();   }
-    // }
+    // TODO: refactor to function
+    if card.item == answer {
+      println!("correct!");
+      if card.quality.parse::<f64>().unwrap() < 5. {
+        diesel::update(memory.filter(item.eq(card.item)))
+          .set(quality.eq((card.quality.parse::<f64>().unwrap() + 1.).to_string()))
+          .returning(Card::as_returning())
+          .get_result(conn)
+          .unwrap();
+      }
+    } else {
+      println!("wrong!");
+      if card.quality.parse::<f64>().unwrap() > 0. {
+        diesel::update(memory.filter(item.eq(card.item)))
+          .set(quality.eq((card.quality.parse::<f64>().unwrap() - 1.).to_string()))
+          .returning(Card::as_returning())
+          .get_result(conn)
+          .unwrap();
+      }
+    }
 
     // card.update();
     // println!(
