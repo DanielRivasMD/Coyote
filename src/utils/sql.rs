@@ -46,6 +46,17 @@ pub fn insert_insertable_struct(
 // TODO: cli arg?
 fn get_db_path() -> anyResult<String> {
   Ok("coyote.db".to_string())
+// retrieve all records from database
+pub fn get_memory() -> anyResult<Vec<Card>> {
+  let conn = &mut establish_db_connection().unwrap();
+  let results: Vec<Card> = memory
+    // .filter(difficulty.eq("2.5"))
+    // .select((item, example, misc, quality, difficulty, interval, repetitions))
+    .select(Card::as_select())
+    .load::<Card>(conn)
+    .expect("Error loading users");
+
+  Ok(results)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
