@@ -27,14 +27,14 @@ use crate::utils::error::CoyoteError;
 use crate::{
   custom::cards::Card,
   utils::{
-    sql::insert_insertable_struct,
+    sql::insert_struct,
     traits::StringLoader,
   },
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-fn byte_file_reader(input_file: PathBuf) -> anyResult<ByteLines<BufReader<File>>> {
+fn byte_read_io(input_file: PathBuf) -> anyResult<ByteLines<BufReader<File>>> {
   let file = File::open(&input_file).context(CoyoteError::ReadFile {
     f: input_file.into(),
   })?;
@@ -47,12 +47,12 @@ fn byte_file_reader(input_file: PathBuf) -> anyResult<ByteLines<BufReader<File>>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub fn reader(
+pub fn read_io(
   file: PathBuf,
   mut conn: SqliteConnection,
 ) -> anyResult<()> {
   // read input
-  let mut lines = byte_file_reader(file)?;
+  let mut lines = byte_read_io(file)?;
 
   // iterate on lines
   while let Some(line) = lines.next() {
@@ -64,7 +64,7 @@ pub fn reader(
     let card = Card::load_from_str(fields.clone())?;
 
     // insert to database
-    insert_insertable_struct(card, &mut conn)?;
+    insert_struct(card, &mut conn)?;
   }
 
   Ok(())
