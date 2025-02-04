@@ -93,41 +93,39 @@ impl Card {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 impl Card {
-  fn set_difficulty(&mut self, conn: &mut SqliteConnection, v: f64) {
-    diesel::update(memory.filter(item.eq(self.item.clone())))
-      .set(difficulty.eq(v.to_string()))
-      .returning(Card::as_returning())
-      .get_result(conn)
-      .unwrap();
-  }
+    pub fn set_field<T: ToString, F>(&mut self, conn: &mut SqliteConnection, column: FieldsToUpdate, value: T, factor: T, lambda: F) where F: Fn(T, T) -> T {
 
-  fn set_interval(&mut self, conn: &mut SqliteConnection, v: u32) {
-    diesel::update(memory.filter(item.eq(self.item.clone())))
-      .set(interval.eq(v.to_string()))
-      .returning(Card::as_returning())
-      .get_result(conn)
-      .unwrap();
-  }
-
-  fn set_repetitions(&mut self, conn: &mut SqliteConnection, v: u32) {
-    diesel::update(memory.filter(item.eq(self.item.clone())))
-      .set(repetitions.eq(v.to_string()))
-      .returning(Card::as_returning())
-      .get_result(conn)
-      .unwrap();
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-impl Card {
-  pub fn update_quality<F>(&mut self, conn: &mut SqliteConnection, q: u32, i: u32, f: F) where F: Fn(u32, u32) -> u32 {
-    diesel::update(memory.filter(item.eq(self.item.clone())))
-      .set(quality.eq(f(q, i).to_string()))
-      .returning(Card::as_returning())
-      .get_result(conn)
-      .unwrap();
-  }
+match column {
+  FieldsToUpdate::Quality => {
+  diesel::update(memory.filter(item.eq(self.item.clone())))
+    .set(quality.eq(lambda(value, factor).to_string()))
+    .returning(Card::as_returning())
+    .get_result(conn)
+    .unwrap();
+  },
+  FieldsToUpdate::Difficulty => {
+              diesel::update(memory.filter(item.eq(self.item.clone())))
+                .set(difficulty.eq(value.to_string()))
+                .returning(Card::as_returning())
+                .get_result::<Card>(conn)
+                .unwrap();
+            },
+            FieldsToUpdate::Interval => {
+              diesel::update(memory.filter(item.eq(self.item.clone())))
+                .set(interval.eq(value.to_string()))
+                .returning(Card::as_returning())
+                .get_result::<Card>(conn)
+                .unwrap();
+            },
+            FieldsToUpdate::Repetitions => {
+              diesel::update(memory.filter(item.eq(self.item.clone())))
+                .set(repetitions.eq(value.to_string()))
+                .returning(Card::as_returning())
+                .get_result::<Card>(conn)
+                .unwrap();
+            },
+        };
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
