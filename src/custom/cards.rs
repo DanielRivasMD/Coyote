@@ -62,26 +62,24 @@ impl Card {
     // quality is locked between 0 - 5
     if self.quality.parse::<u32>().unwrap() >= 3 {
       if self.repetitions.parse::<u32>().unwrap() == 0 {
-        self.set_interval(conn, 1);
+        self.set_field(conn, FieldsToUpdate::Interval, 1, 0, |v, f| v);
       } else if self.repetitions.parse::<u32>().unwrap() == 1 {
-        self.set_interval(conn, 6);
+        self.set_field(conn, FieldsToUpdate::Interval, 6, 0, |v, f| v);
       } else {
-        self.set_interval(conn, (self.interval.parse::<f64>().unwrap() *
-                  self.difficulty.parse::<f64>().unwrap())
-                .round() as u32);
+        self.set_field(conn, FieldsToUpdate::Interval, self.interval.parse::<f64>().unwrap(),
+          self.difficulty.parse::<f64>().unwrap(), |v, f| ((v * f).round() as u32).into());
       }
-      self.set_repetitions(conn, self.repetitions.parse::<u32>().unwrap() + 1);
+      self.set_field(conn, FieldsToUpdate::Repetitions, self.repetitions.parse::<u32>().unwrap(), 1, |v, f| v + f);
     } else {
-      self.set_repetitions(conn, 0);
-      self.set_interval(conn, 1);
+      self.set_field(conn, FieldsToUpdate::Repetitions, 0, 0, |v, f| v);
+      self.set_field(conn, FieldsToUpdate::Interval, 1, 0, |v, f| v);
     }
 
     // update difficulty
-    self.set_difficulty(conn, self.difficulty.parse::<f64>().unwrap() + 0.1 -
-      (5. - self.quality.parse::<f64>().unwrap()) *
-        (0.08 + (5. - self.quality.parse::<f64>().unwrap()) * 0.02));
+    self.set_field(conn, FieldsToUpdate::Difficulty, self.difficulty.parse::<f64>().unwrap() + 0.1 - (5. - self.quality.parse::<f64>().unwrap()),
+        0.08 + (5. - self.quality.parse::<f64>().unwrap()) * 0.02, |v, f| v * f);
     if self.difficulty.parse::<f64>().unwrap() < 1.3 {
-      self.set_difficulty(conn, 1.3);
+      self.set_field(conn, FieldsToUpdate::Difficulty, 1.3, 0., |v, f| v);
     }
   }
 
