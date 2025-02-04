@@ -44,13 +44,13 @@ pub fn train() -> anyResult<()> {
 
     if card.item == answer {
       println!("correct!");
-      if card.quality.parse::<f64>().unwrap() < 5. {
-        card.update_quality(conn, card.quality.parse::<f64>().unwrap(), 1., |q, i| q + i );
+      if card.quality.parse::<u32>().unwrap() < 5 {
+        card.update_quality(conn, card.quality.parse::<u32>().unwrap(), 1, |q, i| q + i );
       }
     } else {
       println!("wrong!");
-      if card.quality.parse::<f64>().unwrap() > 0. {
-        card.update_quality(conn, card.quality.parse::<f64>().unwrap(), 1., |q, i| q - i );
+      if card.quality.parse::<u32>().unwrap() > 0 {
+        card.update_quality(conn, card.quality.parse::<u32>().unwrap(), 1, |q, i| q - i );
       }
     }
 

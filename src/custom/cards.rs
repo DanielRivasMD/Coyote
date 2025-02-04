@@ -86,7 +86,9 @@ impl Card {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 impl Card {
-  pub fn update_quality<F>(&mut self, conn: &mut SqliteConnection, q: f64, i: f64, f: F) where F: Fn(f64, f64) -> f64 {
+
+impl Card {
+  pub fn update_quality<F>(&mut self, conn: &mut SqliteConnection, q: u32, i: u32, f: F) where F: Fn(u32, u32) -> u32 {
     diesel::update(memory.filter(item.eq(self.item.clone())))
       .set(quality.eq(f(q, i).to_string()))
       .returning(Card::as_returning())
