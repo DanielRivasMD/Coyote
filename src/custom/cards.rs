@@ -1,7 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use anyhow::Result as anyResult;
+use anyhow::{
+  Context,
+  Result as anyResult,
+};
 use diesel::prelude::*;
 use serde::{
   Deserialize,
@@ -12,12 +15,15 @@ use serde::{
 
 // crate utilities
 use crate::{
-  custom::schema::{
-    memory as memory_table,
-    memory::dsl::*,
+  custom::schema::memory::{
+    self as memory_table,
+    dsl::*,
   },
   daedalus,
-  utils::traits::StringLoader,
+  utils::{
+    error::CoyoteError,
+    traits::StringLoader,
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,45 +69,100 @@ impl Card {
   pub fn update_score(
     &mut self,
     conn: &mut SqliteConnection,
-  ) {
+  ) -> anyResult<()> {
     // quality is locked between 0 - 5
-    if self.quality.parse::<u32>().unwrap() >= 3 {
-      if self.repetitions.parse::<u32>().unwrap() == 0 {
-        self.set_field(conn, FieldsToUpdate::Interval, 1, 0, |v, f| v);
-      } else if self.repetitions.parse::<u32>().unwrap() == 1 {
-        self.set_field(conn, FieldsToUpdate::Interval, 6, 0, |v, f| v);
+    if self.quality.parse::<u32>().context(CoyoteError::Parsing {
+      f: self.quality.clone(),
+    })? >=
+      3
+    {
+      if self
+        .repetitions
+        .parse::<u32>()
+        .context(CoyoteError::Parsing {
+          f: self.repetitions.clone(),
+        })? ==
+        0
+      {
+        self.set_field(conn, FieldsToUpdate::Interval, 1, 0, |v, f| v)?;
+      } else if self
+        .repetitions
+        .parse::<u32>()
+        .context(CoyoteError::Parsing {
+          f: self.repetitions.clone(),
+        })? ==
+        1
+      {
+        self.set_field(conn, FieldsToUpdate::Interval, 6, 0, |v, f| v)?;
       } else {
         self.set_field(
           conn,
           FieldsToUpdate::Interval,
-          self.interval.parse::<f64>().unwrap(),
-          self.difficulty.parse::<f64>().unwrap(),
+          self.interval.parse::<f64>().context(CoyoteError::Parsing {
+            f: self.interval.clone(),
+          })?,
+          self
+            .difficulty
+            .parse::<f64>()
+            .context(CoyoteError::Parsing {
+              f: self.difficulty.clone(),
+            })?,
           |v, f| ((v * f).round() as u32).into(),
-        );
+        )?;
       }
       self.set_field(
         conn,
         FieldsToUpdate::Repetitions,
-        self.repetitions.parse::<u32>().unwrap(),
+        self
+          .repetitions
+          .parse::<u32>()
+          .context(CoyoteError::Parsing {
+            f: self.repetitions.clone(),
+          })?,
         1,
         |v, f| v + f,
-      );
+      )?;
     } else {
-      self.set_field(conn, FieldsToUpdate::Repetitions, 0, 0, |v, f| v);
-      self.set_field(conn, FieldsToUpdate::Interval, 1, 0, |v, f| v);
+      self.set_field(conn, FieldsToUpdate::Repetitions, 0, 0, |v, f| v)?;
+      self.set_field(conn, FieldsToUpdate::Interval, 1, 0, |v, f| v)?;
     }
 
     // update difficulty
     self.set_field(
       conn,
       FieldsToUpdate::Difficulty,
-      self.difficulty.parse::<f64>().unwrap() + 0.1 - (5. - self.quality.parse::<f64>().unwrap()),
-      0.08 + (5. - self.quality.parse::<f64>().unwrap()) * 0.02,
+      self
+        .difficulty
+        .parse::<f64>()
+        .context(CoyoteError::Parsing {
+          f: self.difficulty.clone(),
+        })? +
+        0.1 -
+        (5. -
+          self.quality.parse::<f64>().context(CoyoteError::Parsing {
+            f: self.difficulty.clone(),
+          })?),
+      0.08 +
+        (5. -
+          self.quality.parse::<f64>().context(CoyoteError::Parsing {
+            f: self.quality.clone(),
+          })?) *
+          0.02,
       |v, f| v * f,
-    );
-    if self.difficulty.parse::<f64>().unwrap() < 1.3 {
-      self.set_field(conn, FieldsToUpdate::Difficulty, 1.3, 0., |v, f| v);
+    )?;
+
+    if self
+      .difficulty
+      .parse::<f64>()
+      .context(CoyoteError::Parsing {
+        f: self.difficulty.clone(),
+      })? <
+      1.3
+    {
+      self.set_field(conn, FieldsToUpdate::Difficulty, 1.3, 0., |v, f| v)?;
     }
+
+    Ok(())
   }
 
   // fn next_review_in_days(&self) -> u32 {
@@ -119,7 +180,7 @@ impl Card {
     value: T,
     factor: T,
     lambda: F,
-  ) where
+  ) -> anyResult<()> where
     F: Fn(T, T) -> T,
   {
     match column {
@@ -128,30 +189,32 @@ impl Card {
           .set(quality.eq(lambda(value, factor).to_string()))
           .returning(Card::as_returning())
           .get_result(conn)
-          .unwrap();
+          .context(CoyoteError::DatabaseUpdate)?;
       }
       FieldsToUpdate::Difficulty => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(difficulty.eq(value.to_string()))
           .returning(Card::as_returning())
           .get_result::<Card>(conn)
-          .unwrap();
+          .context(CoyoteError::DatabaseUpdate)?;
       }
       FieldsToUpdate::Interval => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(interval.eq(value.to_string()))
           .returning(Card::as_returning())
           .get_result::<Card>(conn)
-          .unwrap();
+          .context(CoyoteError::DatabaseUpdate)?;
       }
       FieldsToUpdate::Repetitions => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(repetitions.eq(value.to_string()))
           .returning(Card::as_returning())
           .get_result::<Card>(conn)
-          .unwrap();
+          .context(CoyoteError::DatabaseUpdate)?;
       }
     };
+
+    Ok(())
   }
 }
 
