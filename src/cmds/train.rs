@@ -57,22 +57,34 @@ pub fn train() -> anyResult<()> {
 
     if card.item == answer {
       println!("correct!");
-      if card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone() })? < 5 {
+      if card.quality.parse::<u32>().context(CoyoteError::Parsing {
+        f: card.quality.clone(),
+      })? <
+        5
+      {
         card.set_field(
           conn,
           FieldsToUpdate::Quality,
-          card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone() })?,
+          card.quality.parse::<u32>().context(CoyoteError::Parsing {
+            f: card.quality.clone(),
+          })?,
           1,
           |v, f| v + f,
         )?;
       }
     } else {
       println!("wrong!");
-      if card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone() })? > 0 {
+      if card.quality.parse::<u32>().context(CoyoteError::Parsing {
+        f: card.quality.clone(),
+      })? >
+        0
+      {
         card.set_field(
           conn,
           FieldsToUpdate::Quality,
-          card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone() })?,
+          card.quality.parse::<u32>().context(CoyoteError::Parsing {
+            f: card.quality.clone(),
+          })?,
           1,
           |v, f| v - f,
         )?;

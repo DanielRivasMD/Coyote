@@ -180,7 +180,8 @@ impl Card {
     value: T,
     factor: T,
     lambda: F,
-  ) -> anyResult<()> where
+  ) -> anyResult<()>
+  where
     F: Fn(T, T) -> T,
   {
     match column {
