@@ -5,6 +5,10 @@ use anyhow::{
   Context,
   Result as anyResult,
 };
+use rand::{
+  rng,
+  seq::SliceRandom,
+};
 use std::io;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +31,13 @@ pub fn train() -> anyResult<()> {
   let conn = &mut set_conn_db()?;
 
   // retrieve from database
-  let cards = get_memory(conn)?;
+  let mut cards = get_memory(conn)?;
+
+  // create random number generator
+  let mut rng = rng();
+
+  // shuffle the array
+  cards.shuffle(&mut rng);
 
   // iterate on data
   for mut card in cards {
