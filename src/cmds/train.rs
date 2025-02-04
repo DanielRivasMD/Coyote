@@ -15,8 +15,10 @@ use crate::utils::error::CoyoteError;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::utils::sql::*;
-use crate::custom::cards::FieldsToUpdate;
+use crate::{
+  custom::cards::FieldsToUpdate,
+  utils::sql::*,
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,12 +48,24 @@ pub fn train() -> anyResult<()> {
     if card.item == answer {
       println!("correct!");
       if card.quality.parse::<u32>().unwrap() < 5 {
-        card.set_field(conn, FieldsToUpdate::Quality, card.quality.parse::<u32>().unwrap(), 1, |v, f| v + f );
+        card.set_field(
+          conn,
+          FieldsToUpdate::Quality,
+          card.quality.parse::<u32>().unwrap(),
+          1,
+          |v, f| v + f,
+        );
       }
     } else {
       println!("wrong!");
       if card.quality.parse::<u32>().unwrap() > 0 {
-        card.set_field(conn, FieldsToUpdate::Quality, card.quality.parse::<u32>().unwrap(), 1, |v, f| v - f );
+        card.set_field(
+          conn,
+          FieldsToUpdate::Quality,
+          card.quality.parse::<u32>().unwrap(),
+          1,
+          |v, f| v - f,
+        );
       }
     }
 

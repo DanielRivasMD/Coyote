@@ -20,7 +20,10 @@ use crate::utils::error::CoyoteError;
 // crate utilities
 use crate::{
   custom::cards::Card,
-  utils::sql::{set_conn_db, insert_struct},
+  utils::sql::{
+    insert_struct,
+    set_conn_db,
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +35,7 @@ pub fn read() -> anyResult<()> {
   // initialize card
   let mut card = Card::new();
 
-    // initialize holders
+  // initialize holders
   let mut item = String::new();
   let mut misc = String::new();
 

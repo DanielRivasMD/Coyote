@@ -12,11 +12,13 @@ use serde::{
 
 // crate utilities
 use crate::{
-  custom::schema::memory as memory_table,
+  custom::schema::{
+    memory as memory_table,
+    memory::dsl::*,
+  },
   daedalus,
   utils::traits::StringLoader,
 };
-use crate::custom::schema::memory::dsl::*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -58,7 +60,10 @@ pub enum FieldsToUpdate {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 impl Card {
-  pub fn update_score(&mut self, conn: &mut SqliteConnection) {
+  pub fn update_score(
+    &mut self,
+    conn: &mut SqliteConnection,
+  ) {
     // quality is locked between 0 - 5
     if self.quality.parse::<u32>().unwrap() >= 3 {
       if self.repetitions.parse::<u32>().unwrap() == 0 {
@@ -66,18 +71,34 @@ impl Card {
       } else if self.repetitions.parse::<u32>().unwrap() == 1 {
         self.set_field(conn, FieldsToUpdate::Interval, 6, 0, |v, f| v);
       } else {
-        self.set_field(conn, FieldsToUpdate::Interval, self.interval.parse::<f64>().unwrap(),
-          self.difficulty.parse::<f64>().unwrap(), |v, f| ((v * f).round() as u32).into());
+        self.set_field(
+          conn,
+          FieldsToUpdate::Interval,
+          self.interval.parse::<f64>().unwrap(),
+          self.difficulty.parse::<f64>().unwrap(),
+          |v, f| ((v * f).round() as u32).into(),
+        );
       }
-      self.set_field(conn, FieldsToUpdate::Repetitions, self.repetitions.parse::<u32>().unwrap(), 1, |v, f| v + f);
+      self.set_field(
+        conn,
+        FieldsToUpdate::Repetitions,
+        self.repetitions.parse::<u32>().unwrap(),
+        1,
+        |v, f| v + f,
+      );
     } else {
       self.set_field(conn, FieldsToUpdate::Repetitions, 0, 0, |v, f| v);
       self.set_field(conn, FieldsToUpdate::Interval, 1, 0, |v, f| v);
     }
 
     // update difficulty
-    self.set_field(conn, FieldsToUpdate::Difficulty, self.difficulty.parse::<f64>().unwrap() + 0.1 - (5. - self.quality.parse::<f64>().unwrap()),
-        0.08 + (5. - self.quality.parse::<f64>().unwrap()) * 0.02, |v, f| v * f);
+    self.set_field(
+      conn,
+      FieldsToUpdate::Difficulty,
+      self.difficulty.parse::<f64>().unwrap() + 0.1 - (5. - self.quality.parse::<f64>().unwrap()),
+      0.08 + (5. - self.quality.parse::<f64>().unwrap()) * 0.02,
+      |v, f| v * f,
+    );
     if self.difficulty.parse::<f64>().unwrap() < 1.3 {
       self.set_field(conn, FieldsToUpdate::Difficulty, 1.3, 0., |v, f| v);
     }
@@ -91,39 +112,47 @@ impl Card {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 impl Card {
-    pub fn set_field<T: ToString, F>(&mut self, conn: &mut SqliteConnection, column: FieldsToUpdate, value: T, factor: T, lambda: F) where F: Fn(T, T) -> T {
-
-match column {
-  FieldsToUpdate::Quality => {
-  diesel::update(memory.filter(item.eq(self.item.clone())))
-    .set(quality.eq(lambda(value, factor).to_string()))
-    .returning(Card::as_returning())
-    .get_result(conn)
-    .unwrap();
-  },
-  FieldsToUpdate::Difficulty => {
-              diesel::update(memory.filter(item.eq(self.item.clone())))
-                .set(difficulty.eq(value.to_string()))
-                .returning(Card::as_returning())
-                .get_result::<Card>(conn)
-                .unwrap();
-            },
-            FieldsToUpdate::Interval => {
-              diesel::update(memory.filter(item.eq(self.item.clone())))
-                .set(interval.eq(value.to_string()))
-                .returning(Card::as_returning())
-                .get_result::<Card>(conn)
-                .unwrap();
-            },
-            FieldsToUpdate::Repetitions => {
-              diesel::update(memory.filter(item.eq(self.item.clone())))
-                .set(repetitions.eq(value.to_string()))
-                .returning(Card::as_returning())
-                .get_result::<Card>(conn)
-                .unwrap();
-            },
-        };
-    }
+  pub fn set_field<T: ToString, F>(
+    &mut self,
+    conn: &mut SqliteConnection,
+    column: FieldsToUpdate,
+    value: T,
+    factor: T,
+    lambda: F,
+  ) where
+    F: Fn(T, T) -> T,
+  {
+    match column {
+      FieldsToUpdate::Quality => {
+        diesel::update(memory.filter(item.eq(self.item.clone())))
+          .set(quality.eq(lambda(value, factor).to_string()))
+          .returning(Card::as_returning())
+          .get_result(conn)
+          .unwrap();
+      }
+      FieldsToUpdate::Difficulty => {
+        diesel::update(memory.filter(item.eq(self.item.clone())))
+          .set(difficulty.eq(value.to_string()))
+          .returning(Card::as_returning())
+          .get_result::<Card>(conn)
+          .unwrap();
+      }
+      FieldsToUpdate::Interval => {
+        diesel::update(memory.filter(item.eq(self.item.clone())))
+          .set(interval.eq(value.to_string()))
+          .returning(Card::as_returning())
+          .get_result::<Card>(conn)
+          .unwrap();
+      }
+      FieldsToUpdate::Repetitions => {
+        diesel::update(memory.filter(item.eq(self.item.clone())))
+          .set(repetitions.eq(value.to_string()))
+          .returning(Card::as_returning())
+          .get_result::<Card>(conn)
+          .unwrap();
+      }
+    };
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
