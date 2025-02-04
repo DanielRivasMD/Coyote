@@ -6,7 +6,8 @@
 - done  set up learning model: weights, training & penalties
 - done  custom datatypes for model
 - done  store values & prompt
-- done   promt questions & examples from database
-- done   retrieve & compare appropiate values
-- todo  randomizer
+- done  promt questions & examples from database
+- done  retrieve & compare appropiate values
+- done  randomizer
 - todo  render to browser & mobile (possible Dioxis)
+- todo  file parser combined with web scrapper
