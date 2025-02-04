@@ -49,32 +49,30 @@ pub struct Card {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 impl Card {
-  pub fn update(&mut self) {
+  pub fn update_score(&mut self, conn: &mut SqliteConnection) {
     // quality is locked between 0 - 5
     if self.quality.parse::<u32>().unwrap() >= 3 {
       if self.repetitions.parse::<u32>().unwrap() == 0 {
-        self.interval = "1".to_string();
+        self.set_interval(conn, 1);
       } else if self.repetitions.parse::<u32>().unwrap() == 1 {
-        self.interval = "6".to_string();
+        self.set_interval(conn, 6);
       } else {
-        self.interval = ((self.interval.parse::<f64>().unwrap() *
-          self.difficulty.parse::<f64>().unwrap())
-        .round() as u32)
-          .to_string();
+        self.set_interval(conn, (self.interval.parse::<f64>().unwrap() *
+                  self.difficulty.parse::<f64>().unwrap())
+                .round() as u32);
       }
-      self.repetitions = (self.repetitions.parse::<u32>().unwrap() + 1).to_string();
+      self.set_repetitions(conn, self.repetitions.parse::<u32>().unwrap() + 1);
     } else {
-      self.repetitions = "0".to_string();
-      self.interval = "1".to_string();
+      self.set_repetitions(conn, 0);
+      self.set_interval(conn, 1);
     }
 
     // update difficulty
-    self.difficulty = (self.difficulty.parse::<f64>().unwrap() + 0.1 -
+    self.set_difficulty(conn, self.difficulty.parse::<f64>().unwrap() + 0.1 -
       (5. - self.quality.parse::<f64>().unwrap()) *
-        (0.08 + (5. - self.quality.parse::<f64>().unwrap()) * 0.02))
-      .to_string();
+        (0.08 + (5. - self.quality.parse::<f64>().unwrap()) * 0.02));
     if self.difficulty.parse::<f64>().unwrap() < 1.3 {
-      self.difficulty = "1.3".to_string();
+      self.set_difficulty(conn, 1.3);
     }
   }
 
