@@ -39,6 +39,9 @@ pub enum CoyoteError {
 
   #[error("\n{}\n", "Error loading data".red())]
   DatabaseLoad,
+
+  #[error("\n{}\n", "Error updating data".red())]
+  DatabaseUpdate,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
