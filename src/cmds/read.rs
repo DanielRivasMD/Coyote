@@ -37,7 +37,7 @@ pub fn read() -> anyResult<()> {
 
   // initialize holders
   let mut item = String::new();
-  let mut misc = String::new();
+  let mut example = String::new();
 
   println!("item?");
   stdin()
@@ -45,11 +45,11 @@ pub fn read() -> anyResult<()> {
     .context(CoyoteError::RegistryLine)?;
   card.item = item.trim().to_string();
 
-  println!("misc?");
+  println!("example?");
   stdin()
-    .read_to_string(&mut misc)
+    .read_to_string(&mut example)
     .context(CoyoteError::RegistryLine)?;
-  card.misc = misc;
+  card.example = example;
 
   // insert to database
   insert_struct(card, &mut conn)?;
