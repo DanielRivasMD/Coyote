@@ -37,6 +37,9 @@ pub enum Commands {
     /// Input file
     #[arg(long)]
     input: PathBuf,
+
+    #[arg(long)]
+    lang: String,
   },
 
   /// Train your skills
