@@ -33,6 +33,9 @@ use crate::{
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Card {
   #[new(default)]
+  pub lang: String,
+
+  #[new(default)]
   pub item: String,
 
   #[new(default)]
