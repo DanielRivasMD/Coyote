@@ -33,8 +33,8 @@ fn main() -> anyResult<()> {
       load(input, lang.clone())?;
     }
 
-    Commands::Train {  } => {
-      train()?;
+    Commands::Train { lang } => {
+      train(lang.clone())?;
     }
   }
 

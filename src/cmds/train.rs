@@ -26,12 +26,12 @@ use crate::{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub fn train() -> anyResult<()> {
+pub fn train(lang: String) -> anyResult<()> {
   // set connection
   let conn = &mut set_conn_db()?;
 
   // retrieve from database
-  let mut cards = get_memory(conn)?;
+  let mut cards = get_memory(conn, lang)?;
 
   // create random number generator
   let mut rng = rng();
