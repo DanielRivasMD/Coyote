@@ -38,12 +38,17 @@ pub enum Commands {
     #[arg(long)]
     input: PathBuf,
 
+    /// Language to load
     #[arg(long)]
     lang: String,
   },
 
   /// Train your skills
-  Train {},
+  Train {
+    /// Language to load
+    #[arg(long)]
+    lang: String,
+  },
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
