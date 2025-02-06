@@ -18,12 +18,12 @@ use crate::utils::{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub fn load(input: &PathBuf) -> anyResult<()> {
+pub fn load(input: &PathBuf, lang: String) -> anyResult<()> {
   // open database connection
   let conn = set_conn_db()?;
 
   // read input
-  read_io(input.to_path_buf(), conn)?;
+  read_io(input.to_path_buf(), lang, conn)?;
 
   Ok(())
 }

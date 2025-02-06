@@ -49,6 +49,7 @@ fn byte_read_io(input_file: PathBuf) -> anyResult<ByteLines<BufReader<File>>> {
 
 pub fn read_io(
   file: PathBuf,
+  lang: String,
   mut conn: SqliteConnection,
 ) -> anyResult<()> {
   // read input
@@ -61,7 +62,10 @@ pub fn read_io(
     let fields = line_read.split(',').collect::<Vec<&str>>();
 
     // load from line
-    let card = Card::load_from_str(fields.clone())?;
+    let mut card = Card::load_from_str(fields.clone())?;
+
+    // load from argument
+    card.lang = lang.clone();
 
     // insert to database
     insert_struct(card, &mut conn)?;

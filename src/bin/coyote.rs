@@ -29,8 +29,8 @@ fn main() -> anyResult<()> {
       read()?;
     }
 
-    Commands::Load { input } => {
-      load(input)?;
+    Commands::Load { input, lang } => {
+      load(input, lang.clone())?;
     }
 
     Commands::Train {  } => {
