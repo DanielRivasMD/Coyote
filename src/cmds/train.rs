@@ -97,7 +97,7 @@ pub fn train(lang: String) -> anyResult<()> {
     // update scores
     card.update_score(conn)?;
     println!(
-      "Quality: {}, Repetitions: {}, Interval: {} days, Ease Factor: {:.2}",
+      "Quality: {}, Repetitions: {}, Interval: {}, Ease Factor: {:.2}",
       card.quality, card.repetitions, card.interval, card.difficulty
     );
   }
