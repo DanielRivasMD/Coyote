@@ -22,7 +22,7 @@ pub enum CoyoteError {
   #[error("\n{}: {f:?}\n", "Fail to write file".red())]
   WriteFile { f: String },
 
-  #[error("\n{}: {f:?}\n", "Fail to parse".red())]
+  #[error("\n{}: {f:?}\n", "Fail to parse string".red())]
   Parsing { f: String },
 
   #[error("\n{}: {f:?}\n", "Fail to parse flag".red())]
