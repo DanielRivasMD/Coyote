@@ -19,7 +19,6 @@ use crate::utils::error::CoyoteError;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::custom::cards::current_time;
 use crate::{
   custom::cards::FieldsToUpdate,
   utils::sql::*,
@@ -44,9 +43,6 @@ pub fn train(lang: String) -> anyResult<()> {
   for mut card in cards {
     println!("{}", card.item);
     println!("{}", card.example);
-
-    card.date = current_time().to_string();
-    card.set_field(conn, FieldsToUpdate::Date, card.date.clone(), String::new(), |v, f| v)?;
 
     // capture user input
     let mut answer = String::new();
@@ -95,7 +91,8 @@ pub fn train(lang: String) -> anyResult<()> {
       }
     }
 
-    // card.update();
+    // update scores
+    // card.update_score(conn)?;
     println!(
       "Quality: {}, Repetitions: {}, Interval: {} days, Ease Factor: {:.2}",
       card.quality, card.repetitions, card.interval, card.difficulty
