@@ -10,7 +10,7 @@ use serde::{
   Deserialize,
   Serialize,
 };
-use chrono::Utc;
+use chrono::{NaiveDateTime, Utc, Duration};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +24,7 @@ use crate::{
   utils::{
     error::CoyoteError,
     traits::StringLoader,
-  },
+  }, DATE_FORMAT,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +33,13 @@ use crate::{
 pub fn current_time() -> String {
     let now = Utc::now().naive_utc();
     now.format("%Y-%m-%d").to_string()
+}
+
+// add delta time
+pub fn delta_date(date_str: &str, days: i64) -> anyResult<()> {
+  let delta = NaiveDateTime::parse_from_str(date_str, DATE_FORMAT)?.checked_add_signed(Duration::days(days)).unwrap();
+  println!("{}", delta);
+  Ok(())
 }
 
 #[derive(new, Debug, Default, Insertable, Queryable, Selectable, Serialize, Deserialize)]
@@ -175,10 +182,6 @@ impl Card {
 
     Ok(())
   }
-
-  // fn next_review_in_days(&self) -> u32 {
-  //   self.interval
-  // }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
