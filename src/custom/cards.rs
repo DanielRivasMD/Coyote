@@ -64,6 +64,7 @@ pub enum FieldsToUpdate {
   Difficulty,
   Interval,
   Repetitions,
+  Date,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,6 +189,13 @@ impl Card {
     F: Fn(T, T) -> T,
   {
     match column {
+      FieldsToUpdate::Date => {
+        diesel::update(memory.filter(item.eq(self.item.clone())))
+          .set(date.eq(value.to_string()))
+          .returning(Card::as_returning())
+          .get_result::<Card>(conn)
+          .context(CoyoteError::DatabaseUpdate)?;
+      }
       FieldsToUpdate::Quality => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(quality.eq(lambda(value, factor).to_string()))
