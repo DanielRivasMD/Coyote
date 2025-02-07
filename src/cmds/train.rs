@@ -20,8 +20,8 @@ use crate::utils::error::CoyoteError;
 
 // crate utilities
 use crate::{
-  custom::cards::FieldsToUpdate,
-  utils::sql::*,
+  custom::fields::Fields,
+  utils::sql::{get_memory, set_conn_db},
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ pub fn train(lang: String) -> anyResult<()> {
       {
         card.set_field(
           conn,
-          FieldsToUpdate::Quality,
+          Fields::Quality,
           card.quality.parse::<u32>().context(CoyoteError::Parsing {
             f: card.quality.clone(),
           })?,
@@ -81,7 +81,7 @@ pub fn train(lang: String) -> anyResult<()> {
       {
         card.set_field(
           conn,
-          FieldsToUpdate::Quality,
+          Fields::Quality,
           card.quality.parse::<u32>().context(CoyoteError::Parsing {
             f: card.quality.clone(),
           })?,
@@ -92,7 +92,7 @@ pub fn train(lang: String) -> anyResult<()> {
     }
 
     // update scores
-    // card.update_score(conn)?;
+    card.update_score(conn)?;
     println!(
       "Quality: {}, Repetitions: {}, Interval: {} days, Ease Factor: {:.2}",
       card.quality, card.repetitions, card.interval, card.difficulty

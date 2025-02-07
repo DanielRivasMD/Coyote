@@ -29,7 +29,8 @@ use crate::{
     time::current_date, traits::StringLoader
   },
 };
-use crate::utils::time::*;
+use crate::utils::time::delta_date;
+use crate::custom::fields::Fields;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -61,15 +62,6 @@ pub struct Card {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub enum FieldsToUpdate {
-  Quality,
-  Difficulty,
-  Interval,
-  Repetitions,
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 impl Card {
   pub fn update_score(
     &mut self,
@@ -89,7 +81,7 @@ impl Card {
         })? ==
         0
       {
-        self.set_field(conn, FieldsToUpdate::Interval, 1, 0, |v, f| v)?;
+        self.set_field(conn, Fields::Interval, 1, 0, |v, f| v)?;
       } else if self
         .repetitions
         .parse::<u32>()
@@ -98,11 +90,11 @@ impl Card {
         })? ==
         1
       {
-        self.set_field(conn, FieldsToUpdate::Interval, 6, 0, |v, f| v)?;
+        self.set_field(conn, Fields::Interval, 6, 0, |v, f| v)?;
       } else {
         self.set_field(
           conn,
-          FieldsToUpdate::Interval,
+          Fields::Interval,
           self.interval.parse::<f64>().context(CoyoteError::Parsing {
             f: self.interval.clone(),
           })?,
@@ -117,7 +109,7 @@ impl Card {
       }
       self.set_field(
         conn,
-        FieldsToUpdate::Repetitions,
+        Fields::Repetitions,
         self
           .repetitions
           .parse::<u32>()
@@ -128,14 +120,14 @@ impl Card {
         |v, f| v + f,
       )?;
     } else {
-      self.set_field(conn, FieldsToUpdate::Repetitions, 0, 0, |v, f| v)?;
-      self.set_field(conn, FieldsToUpdate::Interval, 1, 0, |v, f| v)?;
+      self.set_field(conn, Fields::Repetitions, 0, 0, |v, f| v)?;
+      self.set_field(conn, Fields::Interval, 1, 0, |v, f| v)?;
     }
 
     // update difficulty
     self.set_field(
       conn,
-      FieldsToUpdate::Difficulty,
+      Fields::Difficulty,
       self
         .difficulty
         .parse::<f64>()
@@ -164,7 +156,7 @@ impl Card {
       })? <
       1.3
     {
-      self.set_field(conn, FieldsToUpdate::Difficulty, 1.3, 0., |v, f| v)?;
+      self.set_field(conn, Fields::Difficulty, 1.3, 0., |v, f| v)?;
     }
 
     Ok(())
@@ -177,7 +169,7 @@ impl Card {
   pub fn set_field<T: ToString, F>(
     &mut self,
     conn: &mut SqliteConnection,
-    column: FieldsToUpdate,
+    column: Fields,
     value: T,
     factor: T,
     lambda: F,
@@ -186,28 +178,28 @@ impl Card {
     F: Fn(T, T) -> T,
   {
     match column {
-      FieldsToUpdate::Quality => {
+      Fields::Quality => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(quality.eq(lambda(value, factor).to_string()))
           .returning(Card::as_returning())
           .get_result(conn)
           .context(CoyoteError::DatabaseUpdate)?;
       }
-      FieldsToUpdate::Difficulty => {
+      Fields::Difficulty => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(difficulty.eq(value.to_string()))
           .returning(Card::as_returning())
           .get_result::<Card>(conn)
           .context(CoyoteError::DatabaseUpdate)?;
       }
-      FieldsToUpdate::Interval => {
+      Fields::Interval => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(interval.eq(delta_date(current_date(), value.to_string())?))
           .returning(Card::as_returning())
           .get_result::<Card>(conn)
           .context(CoyoteError::DatabaseUpdate)?;
       }
-      FieldsToUpdate::Repetitions => {
+      Fields::Repetitions => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(repetitions.eq(value.to_string()))
           .returning(Card::as_returning())
