@@ -29,6 +29,8 @@ use crate::{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// TODO: set filter from date onwards
+// TODO: relocate train logic
 pub fn train(lang: String) -> anyResult<()> {
   // set connection
   let conn = &mut set_conn_db()?;
