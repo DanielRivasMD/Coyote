@@ -10,7 +10,11 @@ use serde::{
   Deserialize,
   Serialize,
 };
-use chrono::{NaiveDateTime, Utc, Duration};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// error handler
+use crate::utils::error::CoyoteError;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -22,25 +26,12 @@ use crate::{
   },
   daedalus,
   utils::{
-    error::CoyoteError,
-    traits::StringLoader,
-  }, DATE_FORMAT,
+    time::current_date, traits::StringLoader
+  },
 };
+use crate::utils::time::*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// get current time
-pub fn current_time() -> String {
-    let now = Utc::now().naive_utc();
-    now.format("%Y-%m-%d").to_string()
-}
-
-// add delta time
-pub fn delta_date(date_str: &str, days: i64) -> anyResult<()> {
-  let delta = NaiveDateTime::parse_from_str(date_str, DATE_FORMAT)?.checked_add_signed(Duration::days(days)).unwrap();
-  println!("{}", delta);
-  Ok(())
-}
 
 #[derive(new, Debug, Default, Insertable, Queryable, Selectable, Serialize, Deserialize)]
 #[diesel(table_name = memory_table)]
@@ -61,14 +52,11 @@ pub struct Card {
   #[new(value = "String::from(\"2.5\")")]
   pub difficulty: String,
 
-  #[new(value = "String::from(\"1\")")]
-  pub interval: String,
-
   #[new(value = "String::from(\"0\")")]
   pub repetitions: String,
 
   #[new(default)]
-  pub date: String,
+  pub interval: String,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +66,6 @@ pub enum FieldsToUpdate {
   Difficulty,
   Interval,
   Repetitions,
-  Date,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -199,13 +186,6 @@ impl Card {
     F: Fn(T, T) -> T,
   {
     match column {
-      FieldsToUpdate::Date => {
-        diesel::update(memory.filter(item.eq(self.item.clone())))
-          .set(date.eq(value.to_string()))
-          .returning(Card::as_returning())
-          .get_result::<Card>(conn)
-          .context(CoyoteError::DatabaseUpdate)?;
-      }
       FieldsToUpdate::Quality => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(quality.eq(lambda(value, factor).to_string()))
@@ -222,7 +202,7 @@ impl Card {
       }
       FieldsToUpdate::Interval => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
-          .set(interval.eq(value.to_string()))
+          .set(interval.eq(delta_date(current_date(), value.to_string())?))
           .returning(Card::as_returning())
           .get_result::<Card>(conn)
           .context(CoyoteError::DatabaseUpdate)?;
