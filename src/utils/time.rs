@@ -41,3 +41,14 @@ pub fn delta_date(
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+pub fn diff_date(
+  today: String,
+  delta: String,
+) -> anyResult<f64> {
+  let today = NaiveDate::parse_from_str(&today, DATE_FORMAT)?;
+  let delta = NaiveDate::parse_from_str(&delta, DATE_FORMAT)?;
+  let diff = today.signed_duration_since(delta);
+  Ok(diff.num_days() as f64)
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
