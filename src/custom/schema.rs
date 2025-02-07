@@ -9,9 +9,8 @@ diesel::table! {
     kind -> Text,
     quality -> Text,
     difficulty -> Text,
-    interval -> Text,
     repetitions -> Text,
-    date -> Text,
+    interval -> Text,
   }
 }
 
