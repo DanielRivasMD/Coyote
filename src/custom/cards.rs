@@ -67,100 +67,30 @@ pub struct Card {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#[rustfmt::skip]
 impl Card {
   pub fn update_score(
     &mut self,
     conn: &mut SqliteConnection,
   ) -> anyResult<()> {
     // quality is locked between 0 - 5
-    if self.quality.parse::<u32>().context(CoyoteError::Parsing {
-      f: self.quality.clone(),
-    })? >=
-      3
-    {
-      if self
-        .repetitions
-        .parse::<u32>()
-        .context(CoyoteError::Parsing {
-          f: self.repetitions.clone(),
-        })? ==
-        0
-      {
+    if self.quality.parse::<u32>().context(CoyoteError::Parsing { f: self.quality.clone(), })? >= 3 {
+      if self.repetitions.parse::<u32>().context(CoyoteError::Parsing { f: self.repetitions.clone(), })? == 0 {
         self.set_field(conn, Fields::Interval, 1, 0, |v, f| v)?;
-      } else if self
-        .repetitions
-        .parse::<u32>()
-        .context(CoyoteError::Parsing {
-          f: self.repetitions.clone(),
-        })? ==
-        1
-      {
+      } else if self.repetitions.parse::<u32>().context(CoyoteError::Parsing { f: self.repetitions.clone(), })? == 1 {
         self.set_field(conn, Fields::Interval, 6, 0, |v, f| v)?;
       } else {
-        self.set_field(
-          conn,
-          Fields::Interval,
-          self.interval.parse::<f64>().context(CoyoteError::Parsing {
-            f: self.interval.clone(),
-          })?,
-          self
-            .difficulty
-            .parse::<f64>()
-            .context(CoyoteError::Parsing {
-              f: self.difficulty.clone(),
-            })?,
-          |v, f| ((v * f).round() as u32).into(),
-        )?;
+        self.set_field(conn,Fields::Interval, self.interval.parse::<f64>().context(CoyoteError::Parsing { f: self.interval.clone(), })?,self.difficulty.parse::<f64>().context(CoyoteError::Parsing { f: self.difficulty.clone(), })?, |v, f| ((v * f).round() as u32).into())?;
       }
-      self.set_field(
-        conn,
-        Fields::Repetitions,
-        self
-          .repetitions
-          .parse::<u32>()
-          .context(CoyoteError::Parsing {
-            f: self.repetitions.clone(),
-          })?,
-        1,
-        |v, f| v + f,
-      )?;
+      self.set_field(conn,Fields::Repetitions,self.repetitions.parse::<u32>().context(CoyoteError::Parsing { f: self.repetitions.clone(), })?, 1, |v, f| v + f, )?;
     } else {
       self.set_field(conn, Fields::Repetitions, 0, 0, |v, f| v)?;
       self.set_field(conn, Fields::Interval, 1, 0, |v, f| v)?;
     }
 
     // update difficulty
-    self.set_field(
-      conn,
-      Fields::Difficulty,
-      self
-        .difficulty
-        .parse::<f64>()
-        .context(CoyoteError::Parsing {
-          f: self.difficulty.clone(),
-        })? +
-        0.1 -
-        (5. -
-          self.quality.parse::<f64>().context(CoyoteError::Parsing {
-            f: self.difficulty.clone(),
-          })?),
-      0.08 +
-        (5. -
-          self.quality.parse::<f64>().context(CoyoteError::Parsing {
-            f: self.quality.clone(),
-          })?) *
-          0.02,
-      |v, f| v * f,
-    )?;
-
-    if self
-      .difficulty
-      .parse::<f64>()
-      .context(CoyoteError::Parsing {
-        f: self.difficulty.clone(),
-      })? <
-      1.3
-    {
+    self.set_field(conn,Fields::Difficulty,self.difficulty.parse::<f64>().context(CoyoteError::Parsing { f: self.difficulty.clone(), })? + 0.1 - (5. - self.quality.parse::<f64>().context(CoyoteError::Parsing { f: self.difficulty.clone(), })?),0.08 + (5. - self.quality.parse::<f64>().context(CoyoteError::Parsing { f: self.quality.clone(), })?) * 0.02, |v, f| v * f)?;
+    if self.difficulty.parse::<f64>().context(CoyoteError::Parsing { f: self.difficulty.clone(), })? < 1.3 {
       self.set_field(conn, Fields::Difficulty, 1.3, 0., |v, f| v)?;
     }
 
