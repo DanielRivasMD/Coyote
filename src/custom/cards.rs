@@ -10,8 +10,7 @@ use serde::{
   Deserialize,
   Serialize,
 };
-use chrono::NaiveDateTime;
-use std::time::{SystemTime, UNIX_EPOCH};
+use chrono::Utc;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,11 +29,10 @@ use crate::{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub fn current_time() -> NaiveDateTime {
-    let now = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards");
-    NaiveDateTime::from_timestamp_opt(now.as_secs() as i64, 0).unwrap()
+// get current time
+pub fn current_time() -> String {
+    let now = Utc::now().naive_utc();
+    now.format("%Y-%m-%d").to_string()
 }
 
 #[derive(new, Debug, Default, Insertable, Queryable, Selectable, Serialize, Deserialize)]
