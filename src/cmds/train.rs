@@ -21,7 +21,10 @@ use crate::utils::error::CoyoteError;
 // crate utilities
 use crate::{
   custom::fields::Fields,
-  utils::sql::{get_memory, set_conn_db},
+  utils::sql::{
+    get_memory,
+    set_conn_db,
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

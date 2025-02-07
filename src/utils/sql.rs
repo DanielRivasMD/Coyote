@@ -54,7 +54,10 @@ pub fn insert_struct(
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // retrieve all records from database
-pub fn get_memory(conn: &mut SqliteConnection, filter_lang: String) -> anyResult<Vec<Card>> {
+pub fn get_memory(
+  conn: &mut SqliteConnection,
+  filter_lang: String,
+) -> anyResult<Vec<Card>> {
   let results: Vec<Card> = memory
     .filter(lang.eq(filter_lang))
     // .select((item, example, misc, quality, difficulty, interval, repetitions))

@@ -20,17 +20,22 @@ use crate::utils::error::CoyoteError;
 
 // crate utilities
 use crate::{
-  custom::schema::memory::{
-    self as memory_table,
-    dsl::*,
+  custom::{
+    fields::Fields,
+    schema::memory::{
+      self as memory_table,
+      dsl::*,
+    },
   },
   daedalus,
   utils::{
-    time::current_date, traits::StringLoader
+    time::{
+      current_date,
+      delta_date,
+    },
+    traits::StringLoader,
   },
 };
-use crate::utils::time::delta_date;
-use crate::custom::fields::Fields;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

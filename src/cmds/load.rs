@@ -18,7 +18,10 @@ use crate::utils::{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub fn load(input: &PathBuf, lang: String) -> anyResult<()> {
+pub fn load(
+  input: &PathBuf,
+  lang: String,
+) -> anyResult<()> {
   // open database connection
   let conn = set_conn_db()?;
 
