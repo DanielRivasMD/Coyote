@@ -42,6 +42,9 @@ pub enum CoyoteError {
 
   #[error("\n{}\n", "Error updating data".red())]
   DatabaseUpdate,
+
+  #[error("\n{}\n", "Error parsing date".red())]
+  DateParsing,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
