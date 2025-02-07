@@ -52,6 +52,9 @@ pub struct Card {
 
   #[new(value = "String::from(\"0\")")]
   pub repetitions: String,
+
+  #[new(default)]
+  pub date: String,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -11,6 +11,7 @@ diesel::table! {
     difficulty -> Text,
     interval -> Text,
     repetitions -> Text,
+    date -> Text,
   }
 }
 

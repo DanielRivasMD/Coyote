@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS memory (
   quality TEXT,
   difficulty TEXT,
   interval TEXT,
-  repetitions TEXT
+  repetitions TEXT,
+  date TEXT
 );
 
 ----------------------------------------------------------------------------------------------------
