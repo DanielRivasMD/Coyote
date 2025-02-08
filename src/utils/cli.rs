@@ -19,13 +19,14 @@ use crossterm::{
 use diesel::SqliteConnection;
 use rand::{
   rng,
+  Rng,
   seq::SliceRandom,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // error handler
-use crate::utils::error::CoyoteError;
+use crate::{utils::error::CoyoteError, TRAIN_FAILURE, TRAIN_SUCCESS};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -59,14 +60,14 @@ pub fn train_cli(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
         if let Event::Key(event) = event::read()? {
           match event.code {
             KeyCode::Enter => {
-              println!("Superb!");
+              println!("{}", TRAIN_SUCCESS[rng.random_range(0..TRAIN_SUCCESS.len())]);
               if card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })? < 5 {
                 card.set_field(conn,Fields::Quality,card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })?, 1, |v, f| v + f, )?;
               }
             }
 
             KeyCode::Char(' ') => {
-              println!("Do not give up");
+              println!("{}", TRAIN_FAILURE[rng.random_range(0..TRAIN_FAILURE.len())]);
               if card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })? > 0 {
                 card.set_field(conn,Fields::Quality,card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })?,1,|v, f| v - f, )?;
               }
