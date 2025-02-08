@@ -28,6 +28,7 @@ bytelines = "2.5.0"
 clap = { version = "4.4.3", features = ["derive"] }
 colored = "2.1.0"
 chrono = { version = "0.4", features = ["serde"] }
+crossterm = "0.28.1"
 derive-new = "0.7.0"
 diesel = { version = "2.2.4", features = ["sqlite", "chrono", "returning_clauses_for_sqlite_3_35", "r2d2"] }
 dotenvy = "0.15"
