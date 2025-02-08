@@ -11,12 +11,9 @@ use crossterm::{
     self,
     Event,
     KeyCode,
-    KeyModifiers,
   },
   terminal::{
     self,
-    EnterAlternateScreen,
-    LeaveAlternateScreen,
   },
 };
 use diesel::SqliteConnection;
@@ -24,7 +21,6 @@ use rand::{
   rng,
   seq::SliceRandom,
 };
-use std::io;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -36,10 +32,7 @@ use crate::utils::error::CoyoteError;
 // crate utilities
 use crate::{
   custom::fields::Fields,
-  utils::sql::{
-    get_memory,
-    set_conn_db,
-  },
+  utils::sql::get_memory,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

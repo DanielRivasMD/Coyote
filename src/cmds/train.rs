@@ -1,33 +1,18 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use anyhow::{
-  Context,
-  Result as anyResult,
-};
-use rand::{
-  rng,
-  seq::SliceRandom,
-};
-use std::io;
+use anyhow::Result as anyResult;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // error handler
-use crate::utils::error::CoyoteError;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::{
-  custom::fields::Fields,
-  utils::{
-    cli::train_cli,
-    sql::{
-      get_memory,
-      set_conn_db,
-    },
-  },
+use crate::utils::{
+  cli::train_cli,
+  sql::set_conn_db,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,6 +22,7 @@ pub fn train(lang: String) -> anyResult<()> {
   // set connection
   let conn = &mut set_conn_db()?;
 
+  // train logic
   train_cli(conn, lang)?;
 
   Ok(())
