@@ -18,20 +18,22 @@ use crossterm::{
 };
 use diesel::SqliteConnection;
 use rand::{
-  rng,
   Rng,
+  rng,
   seq::SliceRandom,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // error handler
-use crate::{utils::error::CoyoteError, TRAIN_FAILURE, TRAIN_SUCCESS};
+use crate::utils::error::CoyoteError;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
 use crate::{
+  TRAIN_FAILURE,
+  TRAIN_SUCCESS,
   custom::fields::Fields,
   utils::sql::get_memory,
 };
@@ -51,7 +53,9 @@ pub fn train_cli(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
 
     // iterate on data
     for mut card in cards {
-      print!("\nDo you remember this item: {}\n{}\nPress Enter if you remember, Space if you do not.\n", card.item.red(), card.example.cyan());
+      print!("\nDo you remember: {}\nHere is an example: {}\nPress {} if you remember, {} if you do not, or {} to exti\n",
+        card.item.bright_blue(), card.example.bright_yellow(), "ENTER".bright_white(), "SPACE".bright_white(), "Q".bright_white()
+      );
 
       // enable raw mode
       terminal::enable_raw_mode()?;
@@ -60,14 +64,14 @@ pub fn train_cli(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
         if let Event::Key(event) = event::read()? {
           match event.code {
             KeyCode::Enter => {
-              println!("{}", TRAIN_SUCCESS[rng.random_range(0..TRAIN_SUCCESS.len())]);
+              print!("\n{}\n", TRAIN_SUCCESS[rng.random_range(0..TRAIN_SUCCESS.len())].bright_green());
               if card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })? < 5 {
                 card.set_field(conn,Fields::Quality,card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })?, 1, |v, f| v + f, )?;
               }
             }
 
             KeyCode::Char(' ') => {
-              println!("{}", TRAIN_FAILURE[rng.random_range(0..TRAIN_FAILURE.len())]);
+              print!("\n{}\n", TRAIN_FAILURE[rng.random_range(0..TRAIN_FAILURE.len())].bright_red());
               if card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })? > 0 {
                 card.set_field(conn,Fields::Quality,card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })?,1,|v, f| v - f, )?;
               }
