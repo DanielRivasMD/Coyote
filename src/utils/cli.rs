@@ -3,6 +3,8 @@
 
 // standard libraries
 use colored::*;
+use crossterm::event::{self, Event, KeyCode, KeyModifiers};
+use crossterm::terminal::{self, EnterAlternateScreen, LeaveAlternateScreen};
 use anyhow::{
   Context,
   Result as anyResult,
@@ -32,6 +34,7 @@ use crate::{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#[rustfmt::skip]
 pub fn train_cli(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
 // retrieve from database
     let mut cards = get_memory(conn, lang)?;
@@ -42,55 +45,40 @@ pub fn train_cli(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
     // shuffle the array
     cards.shuffle(&mut rng);
 
+    // enable raw mode
+    terminal::enable_raw_mode()?;
+    // BUG: indentation
+
     // iterate on data
     for mut card in cards {
       println!("Do you remember this item: {}", card.item.red());
       println!("{}", card.example.cyan());
+      println!("Press Left if you remember, Right if you do not.");
 
-      // capture user input
-      let mut answer = String::new();
-      io::stdin()
-        .read_line(&mut answer)
-        .context(CoyoteError::RegistryLine)?;
-      answer = answer.trim().to_string();
+      if event::poll(std::time::Duration::from_secs(60))? {
+        if let Event::Key(event) = event::read()? {
+          match event.code {
+            KeyCode::Enter => {
+              println!("Superb!");
+              if card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })? < 5 {
+                card.set_field(conn,Fields::Quality,card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })?, 1, |v, f| v + f, )?;
+              }
+            }
 
-      // display answers
-      println!("You answered: {}", answer);
-      println!("{}", answer == card.item);
+            KeyCode::Char(' ') => {
+              println!("Next time");
+              if card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })? > 0 {
+                card.set_field(conn,Fields::Quality,card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })?,1,|v, f| v - f, )?;
+              }
+            }
 
-      if card.item == answer {
-        println!("correct!");
-        if card.quality.parse::<u32>().context(CoyoteError::Parsing {
-          f: card.quality.clone(),
-        })? <
-          5
-        {
-          card.set_field(
-            conn,
-            Fields::Quality,
-            card.quality.parse::<u32>().context(CoyoteError::Parsing {
-              f: card.quality.clone(),
-            })?,
-            1,
-            |v, f| v + f,
-          )?;
-        }
-      } else {
-        println!("wrong!");
-        if card.quality.parse::<u32>().context(CoyoteError::Parsing {
-          f: card.quality.clone(),
-        })? >
-          0
-        {
-          card.set_field(
-            conn,
-            Fields::Quality,
-            card.quality.parse::<u32>().context(CoyoteError::Parsing {
-              f: card.quality.clone(),
-            })?,
-            1,
-            |v, f| v - f,
-          )?;
+            KeyCode::Char('q') => {
+              println!("Exiting...");
+              break;
+            }
+
+            _ => {}
+          }
         }
       }
 
@@ -101,6 +89,9 @@ pub fn train_cli(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
         card.quality, card.repetitions, card.interval, card.difficulty
       );
     }
+
+      // disable raw mode
+      terminal::disable_raw_mode()?;
 
     Ok(())
     }
