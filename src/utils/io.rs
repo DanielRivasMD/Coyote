@@ -48,9 +48,9 @@ fn byte_read_io(input_file: PathBuf) -> anyResult<ByteLines<BufReader<File>>> {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 pub fn read_io(
+  mut conn: SqliteConnection,
   file: PathBuf,
   lang: String,
-  mut conn: SqliteConnection,
 ) -> anyResult<()> {
   // read input
   let mut lines = byte_read_io(file)?;

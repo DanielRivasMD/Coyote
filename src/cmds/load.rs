@@ -26,7 +26,7 @@ pub fn load(
   let conn = set_conn_db()?;
 
   // read input
-  read_io(input.to_path_buf(), lang, conn)?;
+  read_io(conn, input.to_path_buf(), lang)?;
 
   Ok(())
 }
