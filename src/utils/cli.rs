@@ -48,15 +48,12 @@ pub fn train_cli(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
     // shuffle the array
     cards.shuffle(&mut rng);
 
-    // enable raw mode
-    terminal::enable_raw_mode()?;
-    // BUG: indentation
-
     // iterate on data
     for mut card in cards {
-      println!("Do you remember this item: {}", card.item.red());
-      println!("{}", card.example.cyan());
-      println!("Press Left if you remember, Right if you do not.");
+      print!("\nDo you remember this item: {}\n{}\nPress Enter if you remember, Space if you do not.\n", card.item.red(), card.example.cyan());
+
+      // enable raw mode
+      terminal::enable_raw_mode()?;
 
       if event::poll(std::time::Duration::from_secs(60))? {
         if let Event::Key(event) = event::read()? {
@@ -69,7 +66,7 @@ pub fn train_cli(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
             }
 
             KeyCode::Char(' ') => {
-              println!("Next time");
+              println!("Do not give up");
               if card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })? > 0 {
                 card.set_field(conn,Fields::Quality,card.quality.parse::<u32>().context(CoyoteError::Parsing { f: card.quality.clone(), })?,1,|v, f| v - f, )?;
               }
@@ -85,16 +82,19 @@ pub fn train_cli(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
         }
       }
 
+      // disable raw mode
+      terminal::disable_raw_mode()?;
+
       // update scores
       card.update_score(conn)?;
-      println!(
-        "Quality: {}, Repetitions: {}, Interval: {}, Ease Factor: {:.2}",
+      print!(
+        "\nQuality: {}, Repetitions: {}, Interval: {}, Ease Factor: {:.2}\n",
         card.quality, card.repetitions, card.interval, card.difficulty
       );
     }
 
-      // disable raw mode
-      terminal::disable_raw_mode()?;
+    // disable raw mode
+    terminal::disable_raw_mode()?;
 
     Ok(())
     }
