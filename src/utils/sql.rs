@@ -34,11 +34,9 @@ pub fn set_conn_db() -> anyResult<SqliteConnection> {
     f: "DATABASE_URL".to_string(),
   })?;
 
-  Ok(
-    SqliteConnection::establish(db_path.as_str()).context(CoyoteError::DatabaseConnection {
-      f: db_path,
-    })?,
-  )
+  Ok(SqliteConnection::establish(db_path.as_str()).context(CoyoteError::DatabaseConnection {
+    f: db_path,
+  })?)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

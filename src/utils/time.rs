@@ -32,7 +32,9 @@ pub fn delta_date(
   date_str: String,
   days: String,
 ) -> anyResult<String> {
-  let days = days.parse::<i64>().context(CoyoteError::Parsing { f: days })?;
+  let days = days.parse::<i64>().context(CoyoteError::Parsing {
+    f: days
+  })?;
   let delta = NaiveDate::parse_from_str(&date_str, "%Y-%m-%d")?
     .checked_add_signed(Duration::days(days))
     .context(CoyoteError::DateParsing)?

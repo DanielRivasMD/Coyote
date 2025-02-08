@@ -40,15 +40,11 @@ pub fn read() -> anyResult<()> {
   let mut example = String::new();
 
   println!("item?");
-  stdin()
-    .read_line(&mut item)
-    .context(CoyoteError::RegistryLine)?;
+  stdin().read_line(&mut item).context(CoyoteError::RegistryLine)?;
   card.item = item.trim().to_string();
 
   println!("example?");
-  stdin()
-    .read_to_string(&mut example)
-    .context(CoyoteError::RegistryLine)?;
+  stdin().read_to_string(&mut example).context(CoyoteError::RegistryLine)?;
   card.example = example;
 
   // insert to database

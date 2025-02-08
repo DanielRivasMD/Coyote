@@ -36,7 +36,7 @@ use crate::{
 
 fn byte_read_io(input_file: PathBuf) -> anyResult<ByteLines<BufReader<File>>> {
   let file = File::open(&input_file).context(CoyoteError::ReadFile {
-    f: input_file.into(),
+    f: input_file.into()
   })?;
 
   let reader = BufReader::new(file);

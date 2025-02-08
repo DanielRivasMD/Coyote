@@ -1,20 +1,30 @@
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use colored::*;
-use crossterm::event::{self, Event, KeyCode, KeyModifiers};
-use crossterm::terminal::{self, EnterAlternateScreen, LeaveAlternateScreen};
 use anyhow::{
   Context,
   Result as anyResult,
 };
+use colored::*;
+use crossterm::{
+  event::{
+    self,
+    Event,
+    KeyCode,
+    KeyModifiers,
+  },
+  terminal::{
+    self,
+    EnterAlternateScreen,
+    LeaveAlternateScreen,
+  },
+};
+use diesel::SqliteConnection;
 use rand::{
   rng,
   seq::SliceRandom,
 };
 use std::io;
-use diesel::SqliteConnection;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
