@@ -16,6 +16,8 @@ use crate::utils::error::CoyoteError;
 // crate utilities
 use crate::custom::{cards::*, schema::memory::dsl::*};
 
+use super::time::current_date;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 pub fn set_conn_db() -> anyResult<SqliteConnection> {
@@ -48,6 +50,7 @@ pub fn get_memory(
 ) -> anyResult<Vec<Card>> {
   let results: Vec<Card> = memory
     .filter(lang.eq(filter_lang.clone()))
+    .filter(interval.lt(current_date()))
     // .select((item, example, misc, quality, difficulty, interval, repetitions))
     .select(Card::as_select())
     .load::<Card>(conn)
