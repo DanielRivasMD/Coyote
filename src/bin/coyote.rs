@@ -12,10 +12,10 @@ use clap::Parser;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::utils::help::*;
-use crate::cmds::train::train;
 use crate::cmds::load::load;
 use crate::cmds::read::read;
+use crate::cmds::train::train;
+use crate::utils::help::*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +25,7 @@ fn main() -> anyResult<()> {
 
   // match sub commands
   match &params.command {
-    Commands::Read {  } => {
+    Commands::Read {} => {
       read()?;
     }
 

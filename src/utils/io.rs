@@ -1,20 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use anyhow::{
-  Context,
-  Result as anyResult,
-};
-use bytelines::{
-  ByteLines,
-  ByteLinesReader,
-};
+use anyhow::{Context, Result as anyResult};
+use bytelines::{ByteLines, ByteLinesReader};
 use diesel::SqliteConnection;
-use std::{
-  fs::File,
-  io::BufReader,
-  path::PathBuf,
-};
+use std::{fs::File, io::BufReader, path::PathBuf};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,18 +16,13 @@ use crate::utils::error::CoyoteError;
 // crate utilities
 use crate::{
   custom::cards::Card,
-  utils::{
-    sql::insert_struct,
-    traits::StringLoader,
-  },
+  utils::{sql::insert_struct, traits::StringLoader},
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fn byte_read_io(input_file: PathBuf) -> anyResult<ByteLines<BufReader<File>>> {
-  let file = File::open(&input_file).context(CoyoteError::ReadFile {
-    f: input_file.into()
-  })?;
+  let file = File::open(&input_file).context(CoyoteError::ReadFile { f: input_file.into() })?;
 
   let reader = BufReader::new(file);
 

@@ -1,27 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use anyhow::{
-  Context,
-  Result as anyResult,
-};
+use anyhow::{Context, Result as anyResult};
 use colored::*;
 use crossterm::{
-  event::{
-    self,
-    Event,
-    KeyCode,
-  },
-  terminal::{
-    self,
-  },
+  event::{self, Event, KeyCode},
+  terminal::{self},
 };
 use diesel::SqliteConnection;
-use rand::{
-  Rng,
-  rng,
-  seq::SliceRandom,
-};
+use rand::{Rng, rng, seq::SliceRandom};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -31,12 +18,7 @@ use crate::utils::error::CoyoteError;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::{
-  TRAIN_FAILURE,
-  TRAIN_SUCCESS,
-  custom::fields::Fields,
-  utils::sql::get_memory,
-};
+use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, custom::fields::Fields, utils::sql::get_memory};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -52,6 +34,7 @@ pub fn train_cli(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
     cards.shuffle(&mut rng);
 
     // iterate on data
+    // TODO: printf for message indentation
     for mut card in cards {
       print!("\nDo you remember: {}\nHere is an example: {}\nPress {} if you remember, {} if you do not, or {} to exti\n",
         card.item.bright_blue(), card.example.bright_yellow(), "ENTER".bright_white(), "SPACE".bright_white(), "Q".bright_white()

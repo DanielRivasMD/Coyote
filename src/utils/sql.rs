@@ -1,15 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use anyhow::{
-  Context,
-  Result as anyResult,
-};
-use diesel::{
-  insert_into,
-  prelude::*,
-  sqlite::SqliteConnection,
-};
+use anyhow::{Context, Result as anyResult};
+use diesel::{insert_into, prelude::*, sqlite::SqliteConnection};
 use dotenvy::dotenv;
 use std::env;
 
@@ -21,22 +14,19 @@ use crate::utils::error::CoyoteError;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::custom::{
-  cards::*,
-  schema::memory::dsl::*,
-};
+use crate::custom::{cards::*, schema::memory::dsl::*};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 pub fn set_conn_db() -> anyResult<SqliteConnection> {
   dotenv().ok();
-  let db_path = env::var("DATABASE_URL").context(CoyoteError::DatabaseEnv {
-    f: "DATABASE_URL".to_string(),
-  })?;
+  let db_path =
+    env::var("DATABASE_URL").context(CoyoteError::DatabaseEnv { f: "DATABASE_URL".to_string() })?;
 
-  Ok(SqliteConnection::establish(db_path.as_str()).context(CoyoteError::DatabaseConnection {
-    f: db_path,
-  })?)
+  Ok(
+    SqliteConnection::establish(db_path.as_str())
+      .context(CoyoteError::DatabaseConnection { f: db_path })?,
+  )
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,11 +47,11 @@ pub fn get_memory(
   filter_lang: String,
 ) -> anyResult<Vec<Card>> {
   let results: Vec<Card> = memory
-    .filter(lang.eq(filter_lang))
+    .filter(lang.eq(filter_lang.clone()))
     // .select((item, example, misc, quality, difficulty, interval, repetitions))
     .select(Card::as_select())
     .load::<Card>(conn)
-    .context(CoyoteError::DatabaseLoad)?;
+    .context(CoyoteError::DatabaseLoad { f: filter_lang.clone() })?;
 
   Ok(results)
 }

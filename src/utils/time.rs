@@ -1,13 +1,6 @@
 // standard libraries
-use anyhow::{
-  Context,
-  Result as anyResult,
-};
-use chrono::{
-  Duration,
-  NaiveDate,
-  Utc,
-};
+use anyhow::{Context, Result as anyResult};
+use chrono::{Duration, NaiveDate, Utc};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -32,12 +25,10 @@ pub fn delta_date(
   date_str: String,
   days: String,
 ) -> anyResult<String> {
-  let days = days.parse::<i64>().context(CoyoteError::Parsing {
-    f: days
-  })?;
-  let delta = NaiveDate::parse_from_str(&date_str, "%Y-%m-%d")?
+  let days = days.parse::<i64>().context(CoyoteError::Parsing { f: days })?;
+  let delta = NaiveDate::parse_from_str(&date_str, DATE_FORMAT)?
     .checked_add_signed(Duration::days(days))
-    .context(CoyoteError::DateParsing)?
+    .context(CoyoteError::DateParsing { f: date_str })?
     .to_string();
   Ok(delta)
 }

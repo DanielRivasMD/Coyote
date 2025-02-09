@@ -10,16 +10,14 @@ use anyhow::Result as anyResult;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::utils::{
-  cli::train_cli,
-  sql::set_conn_db,
-};
+use crate::utils::{cli::train_cli, sql::set_conn_db};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // TODO: set filter from date onwards
 pub fn train(lang: String) -> anyResult<()> {
   // set connection
+
   let conn = &mut set_conn_db()?;
 
   // train logic

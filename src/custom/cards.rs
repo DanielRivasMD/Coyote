@@ -1,15 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use anyhow::{
-  Context,
-  Result as anyResult,
-};
+use anyhow::{Context, Result as anyResult};
 use diesel::prelude::*;
-use serde::{
-  Deserialize,
-  Serialize,
-};
+use serde::{Deserialize, Serialize};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,17 +17,11 @@ use crate::utils::time::diff_date;
 use crate::{
   custom::{
     fields::Fields,
-    schema::memory::{
-      self as memory_table,
-      dsl::*,
-    },
+    schema::memory::{self as memory_table, dsl::*},
   },
   daedalus,
   utils::{
-    time::{
-      current_date,
-      delta_date,
-    },
+    time::{current_date, delta_date},
     traits::StringLoader,
   },
 };
@@ -119,28 +107,28 @@ impl Card {
           .set(quality.eq(lambda(value, factor).to_string()))
           .returning(Card::as_returning())
           .get_result(conn)
-          .context(CoyoteError::DatabaseUpdate)?;
+          .context(CoyoteError::DatabaseUpdate { f: self.item.clone() })?;
       }
       Fields::Difficulty => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(difficulty.eq(lambda(value, factor).to_string()))
           .returning(Card::as_returning())
           .get_result::<Card>(conn)
-          .context(CoyoteError::DatabaseUpdate)?;
+          .context(CoyoteError::DatabaseUpdate { f: self.item.clone() })?;
       }
       Fields::Interval => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(interval.eq(delta_date(current_date(), lambda(value, factor).to_string())?))
           .returning(Card::as_returning())
           .get_result::<Card>(conn)
-          .context(CoyoteError::DatabaseUpdate)?;
+          .context(CoyoteError::DatabaseUpdate { f: self.item.clone() })?;
       }
       Fields::Repetitions => {
         diesel::update(memory.filter(item.eq(self.item.clone())))
           .set(repetitions.eq(lambda(value, factor).to_string()))
           .returning(Card::as_returning())
           .get_result::<Card>(conn)
-          .context(CoyoteError::DatabaseUpdate)?;
+          .context(CoyoteError::DatabaseUpdate { f: self.item.clone() })?;
       }
     };
 
