@@ -58,6 +58,7 @@ pub struct Card {
 
 #[rustfmt::skip]
 impl Card {
+  // TODO: review update logic carefully & document it
   pub fn update_score(
     &mut self,
     conn: &mut SqliteConnection,
