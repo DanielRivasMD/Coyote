@@ -7,7 +7,6 @@ use thiserror::Error;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO: use context error
 #[derive(Debug, Error)]
 pub enum CoyoteError {
   #[error("\n{}: {f:?}\n", "Fail to create file".red())]
@@ -38,13 +37,13 @@ pub enum CoyoteError {
   DatabaseEnv { f: String },
 
   #[error("\n{}\n", "Error loading data".red())]
-  DatabaseLoad,
+  DatabaseLoad { f: String },
 
   #[error("\n{}\n", "Error updating data".red())]
-  DatabaseUpdate,
+  DatabaseUpdate { f: String },
 
   #[error("\n{}\n", "Error parsing date".red())]
-  DateParsing,
+  DateParsing { f: String },
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
