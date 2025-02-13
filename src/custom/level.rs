@@ -17,3 +17,16 @@ impl Default for Level {
   }
 }
 
+impl fmt::Display for Level {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    match self {
+      Level::A1 => write!(f, "A1"),
+      Level::A2 => write!(f, "A2"),
+      Level::B1 => write!(f, "B1"),
+      Level::B2 => write!(f, "B2"),
+      Level::C1 => write!(f, "C1"),
+      Level::C2 => write!(f, "C2"),
+    }
+  }
+}
+
