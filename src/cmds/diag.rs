@@ -34,6 +34,7 @@ pub fn diag(lang: String) -> anyResult<()> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#[rustfmt::skip]
 fn diagnose(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
   // retrieve from database
   let mut cards = get_memory(conn, lang)?;

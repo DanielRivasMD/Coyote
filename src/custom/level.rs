@@ -1,18 +1,19 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use diesel::deserialize::FromSql;
-use diesel::serialize::{Output, ToSql};
-use diesel::sql_types::Text;
-use diesel::sqlite::{Sqlite, SqliteValue};
-use diesel::AsExpression;
-use diesel::FromSqlRow;
+use diesel::{
+  AsExpression, FromSqlRow,
+  deserialize::FromSql,
+  serialize::{Output, ToSql},
+  sql_types::Text,
+  sqlite::{Sqlite, SqliteValue},
+};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#[derive(FromSqlRow, Debug, AsExpression, Deserialize, Serialize)]
+#[derive(Debug, AsExpression, FromSqlRow, Deserialize, Serialize)]
 #[diesel(sql_type = Text)]
 pub enum Level {
   A1,
@@ -31,8 +32,13 @@ impl Default for Level {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 impl fmt::Display for Level {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+  fn fmt(
+    &self,
+    f: &mut fmt::Formatter<'_>,
+  ) -> fmt::Result {
     match self {
       Level::A1 => write!(f, "A1"),
       Level::A2 => write!(f, "A2"),
@@ -70,7 +76,10 @@ impl FromSql<Text, Sqlite> for Level {
 }
 
 impl ToSql<Text, Sqlite> for Level {
-  fn to_sql<'b>(&'b self, out: &mut Output<'b, '_, Sqlite>) -> diesel::serialize::Result {
+  fn to_sql<'b>(
+    &'b self,
+    out: &mut Output<'b, '_, Sqlite>,
+  ) -> diesel::serialize::Result {
     out.set_value(self.to_string());
     Ok(diesel::serialize::IsNull::No)
   }
