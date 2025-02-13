@@ -1,5 +1,19 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// standard libraries
+use diesel::deserialize::FromSql;
+use diesel::serialize::{Output, ToSql};
+use diesel::sql_types::Text;
+use diesel::sqlite::{Sqlite, SqliteValue};
+use diesel::AsExpression;
+use diesel::FromSqlRow;
+use serde::{Deserialize, Serialize};
+use std::fmt;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#[derive(FromSqlRow, Debug, AsExpression, Deserialize, Serialize)]
+#[diesel(sql_type = Text)]
 pub enum Level {
   A1,
   A2,
