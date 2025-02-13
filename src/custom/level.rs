@@ -47,3 +47,19 @@ impl TryFrom<&str> for Level {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+impl FromSql<Text, Sqlite> for Level {
+  fn from_sql(bytes: SqliteValue) -> diesel::deserialize::Result<Self> {
+    let t = <String as FromSql<Text, Sqlite>>::from_sql(bytes)?;
+    Ok(t.as_str().try_into()?)
+  }
+}
+
+impl ToSql<Text, Sqlite> for Level {
+  fn to_sql<'b>(&'b self, out: &mut Output<'b, '_, Sqlite>) -> diesel::serialize::Result {
+    out.set_value(self.to_string());
+    Ok(diesel::serialize::IsNull::No)
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
