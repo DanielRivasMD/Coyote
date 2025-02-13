@@ -38,7 +38,7 @@ pub fn train(lang: String) -> anyResult<()> {
 #[rustfmt::skip]
 fn training(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
   // retrieve from database
-  let mut cards = get_memory(conn, lang)?;
+  let mut cards = get_memory(conn, &lang, "A1")?;
 
   // create random number generator
   let mut rng = rng();

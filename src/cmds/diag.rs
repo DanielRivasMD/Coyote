@@ -9,6 +9,7 @@ use crossterm::{
 };
 use diesel::SqliteConnection;
 use rand::{Rng, rng, seq::SliceRandom};
+use strum::IntoEnumIterator;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -19,6 +20,7 @@ use rand::{Rng, rng, seq::SliceRandom};
 // crate utilities
 use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, utils::sql::get_memory};
 use crate::utils::sql::set_conn_db;
+use crate::custom::level::Level;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -36,59 +38,63 @@ pub fn diag(lang: String) -> anyResult<()> {
 
 #[rustfmt::skip]
 fn diagnose(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
-  // retrieve from database
-  let mut cards = get_memory(conn, lang)?;
+  for level in Level::iter() {
+    println!("{}", level);
 
-  // create random number generator
-  let mut rng = rng();
+    // retrieve from database
+    let mut cards = get_memory(conn, &lang, &level.to_string())?;
 
-  // shuffle the array
-  cards.shuffle(&mut rng);
+    // create random number generator
+    let mut rng = rng();
 
-  // iterate on data
-  for mut card in cards {
-    print!("\nDo you know:     {}\nHere is an example:  {}\nPress {} if you know, {} if you do not, or {} to exit\n",
-      card.item.bright_blue(), card.example.bright_yellow(), "ENTER".bright_white(), "SPACE".bright_white(), "Q".bright_white()
-    );
+    // shuffle the array
+    cards.shuffle(&mut rng);
 
-    // enable raw mode
-    terminal::enable_raw_mode()?;
+    // iterate on data
+    for mut card in cards {
+      print!("\nDo you know:     {}\nHere is an example:  {}\nPress {} if you know, {} if you do not, or {} to exit\n",
+        card.item.bright_blue(), card.example.bright_yellow(), "ENTER".bright_white(), "SPACE".bright_white(), "Q".bright_white()
+      );
 
-    if event::poll(std::time::Duration::from_secs(60))? {
-      if let Event::Key(event) = event::read()? {
-        match event.code {
-          KeyCode::Enter => {
-            print!("\n{}\n", TRAIN_SUCCESS[rng.random_range(0..TRAIN_SUCCESS.len())].bright_green());
+      // enable raw mode
+      terminal::enable_raw_mode()?;
+
+      if event::poll(std::time::Duration::from_secs(60))? {
+        if let Event::Key(event) = event::read()? {
+          match event.code {
+            KeyCode::Enter => {
+              print!("\n{}\n", TRAIN_SUCCESS[rng.random_range(0..TRAIN_SUCCESS.len())].bright_green());
+            }
+
+            KeyCode::Char(' ') => {
+              print!("\n{}\n", TRAIN_FAILURE[rng.random_range(0..TRAIN_FAILURE.len())].bright_red());
+            }
+
+            KeyCode::Char('q') => {
+              println!("Exiting...");
+              break;
+            }
+
+            _ => {}
           }
-
-          KeyCode::Char(' ') => {
-            print!("\n{}\n", TRAIN_FAILURE[rng.random_range(0..TRAIN_FAILURE.len())].bright_red());
-          }
-
-          KeyCode::Char('q') => {
-            println!("Exiting...");
-            break;
-          }
-
-          _ => {}
         }
       }
+
+      // disable raw mode
+      terminal::disable_raw_mode()?;
+
+      // update scores
+      card.update_score(conn)?;
+      print!(
+        "\nQuality: {}, Repetitions: {}, Interval: {}, Ease Factor: {:.2}\n",
+        card.quality, card.repetitions, card.interval, card.difficulty
+      );
     }
 
     // disable raw mode
     terminal::disable_raw_mode()?;
 
-    // update scores
-    card.update_score(conn)?;
-    print!(
-      "\nQuality: {}, Repetitions: {}, Interval: {}, Ease Factor: {:.2}\n",
-      card.quality, card.repetitions, card.interval, card.difficulty
-    );
   }
-
-  // disable raw mode
-  terminal::disable_raw_mode()?;
-
 
   Ok(())
 }
