@@ -42,10 +42,17 @@ pub enum Commands {
 
   /// Train your skills
   Train {
-    /// Language to load
+    /// Language to train
     #[arg(long)]
     lang: String,
   },
+
+  /// Diagnose your skill level
+  Diag {
+    /// Language to diagnose
+    #[arg(long)]
+    lang: String,
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
