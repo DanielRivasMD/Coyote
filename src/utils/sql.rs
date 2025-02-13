@@ -46,15 +46,17 @@ pub fn insert_struct(
 // retrieve all records from database
 pub fn get_memory(
   conn: &mut SqliteConnection,
-  filter_lang: String,
+  filter_lang: &str,
+  filter_level: &str,
 ) -> anyResult<Vec<Card>> {
   let results: Vec<Card> = memory
-    .filter(lang.eq(filter_lang.clone()))
+    .filter(lang.eq(filter_lang))
     .filter(interval.lt(current_date()))
+    .filter(level.eq(filter_level))
     // .select((item, example, misc, quality, difficulty, interval, repetitions))
     .select(Card::as_select())
     .load::<Card>(conn)
-    .context(CoyoteError::DatabaseLoad { f: filter_lang.clone() })?;
+    .context(CoyoteError::DatabaseLoad { f: filter_lang.to_string() })?;
 
   Ok(results)
 }
