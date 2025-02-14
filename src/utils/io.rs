@@ -15,7 +15,7 @@ use crate::utils::error::CoyoteError;
 
 // crate utilities
 use crate::{
-  custom::cards::Card,
+  custom::{cards::Card, language::Language},
   utils::{sql::insert_struct, traits::StringLoader},
 };
 
@@ -50,7 +50,7 @@ pub fn read_io(
     let mut card = Card::load_from_str(fields.clone())?;
 
     // load from argument
-    card.lang = lang.clone();
+    card.lang = Language::try_from(lang.clone()).unwrap();
 
     // insert to database
     insert_struct(card, &mut conn)?;
