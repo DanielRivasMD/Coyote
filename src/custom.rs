@@ -3,6 +3,7 @@
 // modules
 pub mod cards;
 pub mod fields;
+pub mod language;
 pub mod level;
 pub mod log_flag;
 pub mod schema;
