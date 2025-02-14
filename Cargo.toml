@@ -7,7 +7,6 @@ authors = [
 repository = "https://github.com/DanielRivasMD/Coyote"
 keywords = []
 categories = []
-licencse = "GLPv3"
 readme = "README.md"
 description = ""
 edition = "2021"
