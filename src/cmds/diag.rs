@@ -36,10 +36,15 @@ pub fn diag(lang: String) -> anyResult<()> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO: implement score system
 #[rustfmt::skip]
 fn diagnose(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
+
+  // preallocate scores
+  let mut scores = vec![];
+
   for level in Level::iter() {
+
+
     println!("{}", level);
 
     // initialize score
@@ -55,7 +60,7 @@ fn diagnose(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
     cards.shuffle(&mut rng);
 
     // iterate on data
-    for mut card in cards {
+    for card in cards {
       print!("\nDo you know:     {}\nHere is an example:  {}\nPress {} if you know, {} if you do not, or {} to exit\n",
         card.item.bright_blue(), card.example.bright_yellow(), "ENTER".bright_white(), "SPACE".bright_white(), "Q".bright_white()
       );
@@ -95,10 +100,14 @@ fn diagnose(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
 
     // update scores
     level_score.calculate_score()?;
+    scores.push((level.to_string(), level_score.score));
     println!("The score for level: {} is {}", level, level_score.score);
 
     // disable raw mode
     terminal::disable_raw_mode()?;
+
+    // prevent next level
+    if scores[scores.len()].1 < 0.75 { break }
 
   }
 
