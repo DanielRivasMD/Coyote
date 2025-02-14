@@ -11,6 +11,7 @@
 - done  randomizer
 - todo  render to browser & mobile (React JS)
 - todo  file parser combined with web scrapper (structured learning)
+- todo  load structured learning database
 
 - todo  architecture:
           load  => read file & upload to database

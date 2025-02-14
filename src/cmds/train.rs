@@ -18,8 +18,8 @@ use crate::utils::error::CoyoteError;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, custom::fields::Fields, utils::sql::get_memory};
 use crate::utils::sql::set_conn_db;
+use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, custom::fields::Fields, utils::sql::get_memory};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -35,6 +35,7 @@ pub fn train(lang: String) -> anyResult<()> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// TODO: review & update training algorithm
 #[rustfmt::skip]
 fn training(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
   // retrieve from database

@@ -13,8 +13,8 @@ use crate::utils::error::CoyoteError;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use super::language::Language;
-use super::level::Level;
+use crate::custom::language::Language;
+use crate::custom::level::Level;
 use crate::utils::time::diff_date;
 use crate::{
   custom::{

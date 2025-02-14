@@ -33,6 +33,7 @@ pub fn delta_date(
   Ok(delta)
 }
 
+// calculate time difference
 pub fn diff_date(
   today: String,
   delta: String,

@@ -19,6 +19,7 @@ use crate::{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// TODO: update read cmd
 pub fn read() -> anyResult<()> {
   // open database connection
   let mut conn = set_conn_db()?;

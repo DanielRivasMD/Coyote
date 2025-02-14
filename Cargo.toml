@@ -38,7 +38,6 @@ strum_macros = "0.25"
 thiserror = "1.0.64"
 
 
-
 [profile.dev]
 opt-level        = 0
 debug            = true

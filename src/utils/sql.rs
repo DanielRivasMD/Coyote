@@ -15,8 +15,7 @@ use crate::utils::error::CoyoteError;
 
 // crate utilities
 use crate::custom::{cards::*, schema::memory::dsl::*};
-
-use super::time::current_date;
+use crate::utils::time::current_date;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

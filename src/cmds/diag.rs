@@ -18,7 +18,7 @@ use strum::IntoEnumIterator;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::custom::level::Level;
+use crate::custom::{level::Level, score::Score};
 use crate::utils::sql::set_conn_db;
 use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, utils::sql::get_memory};
 
@@ -28,7 +28,7 @@ pub fn diag(lang: String) -> anyResult<()> {
   // set connection
   let conn = &mut set_conn_db()?;
 
-  // train logic
+  // diagnose logic
   diagnose(conn, lang)?;
 
   Ok(())
@@ -36,10 +36,14 @@ pub fn diag(lang: String) -> anyResult<()> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// TODO: implement score system
 #[rustfmt::skip]
 fn diagnose(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
   for level in Level::iter() {
     println!("{}", level);
+
+    // initialize score
+    // let level_score = Score::new(level);
 
     // retrieve from database
     let mut cards = get_memory(conn, &lang, &level.to_string())?;
