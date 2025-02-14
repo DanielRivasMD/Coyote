@@ -2,6 +2,7 @@
 
 // standard libraries
 use anyhow::Result as anyResult;
+use diesel::SqliteConnection;
 use std::path::PathBuf;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -11,7 +12,14 @@ use std::path::PathBuf;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::utils::{io::read_io, sql::set_conn_db};
+use crate::utils::traits::StringLoader;
+use crate::{
+  custom::{cards::Card, language::Language},
+  utils::{
+    io::byte_read_io,
+    sql::{insert_struct, set_conn_db},
+  },
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +31,36 @@ pub fn load(
   let conn = set_conn_db()?;
 
   // read input
-  read_io(conn, input.to_path_buf(), lang)?;
+  read_load(conn, input.to_path_buf(), lang)?;
+
+  Ok(())
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+fn read_load(
+  mut conn: SqliteConnection,
+  file: PathBuf,
+  lang: String,
+) -> anyResult<()> {
+  // read input
+  let mut lines = byte_read_io(file)?;
+
+  // iterate on lines
+  while let Some(line) = lines.next() {
+    // read line
+    let line_read = String::from_utf8_lossy(line?);
+    let fields = line_read.split(',').collect::<Vec<&str>>();
+
+    // load from line
+    let mut card = Card::load_from_str(fields.clone())?;
+
+    // load from argument
+    card.lang = Language::try_from(lang.clone()).unwrap();
+
+    // insert to database
+    insert_struct(card, &mut conn)?;
+  }
 
   Ok(())
 }
