@@ -85,6 +85,26 @@ macro_rules! daedalus {
     };
 
   // declare implementation for type
+  // interactive methods for non-referenced fields
+  // implement bare 'update', 'increase' & 'decrease'
+    (
+      $vis: vis,
+      $stt: ident;
+      $(
+        $fld: tt;
+        $fnup: ident, $finc: ident, $fdec: ident - $ty: ty
+      )*
+    ) => {
+      impl $stt {
+        $(
+          daedalus!(update |> $vis, $fld; $fnup - $ty);
+          daedalus!(inc |> $vis, $fld; $finc, $fnup - $ty);
+          daedalus!(dec |> $vis, $fld; $fdec, $fnup - $ty);
+        )*
+      }
+    };
+
+  // declare implementation for type
   // interactive methods for referenced fields
   // implement 'get_own'
     (
@@ -124,10 +144,34 @@ macro_rules! daedalus {
       update |> $vis: vis, $fld: tt; $fnup: ident - $tyup: ty
     ) => {
       $vis fn $fnup(&mut self, up: $tyup) -> anyResult<()> {
-        self.$fld = up;
+        self.$fld = up.into();
         Ok(())
       }
-    }
+    };
+
+  // declare implementation for type
+  // interactive methods for non-referenced fields
+  // implement 'inc'
+    (
+      inc |> $vis: vis, $fld: tt; $finc: ident, $fup: ident - $tinc: ty
+    ) => {
+      $vis fn $finc(&mut self) -> anyResult<()> {
+        self.$fup(self.$fld + 1)?;
+        Ok(())
+      }
+    };
+
+  // declare implementation for type
+  // interactive methods for non-referenced fields
+  // implement 'dec'
+    (
+      dec |> $vis: vis, $fld: tt; $fdec: ident, $fup: ident - $tdec: ty
+    ) => {
+      $vis fn $fdec(&mut self) -> anyResult<()> {
+        self.$fup(self.$fld - 1)?;
+        Ok(())
+      }
+    };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
