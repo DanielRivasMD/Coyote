@@ -13,6 +13,8 @@ use crate::utils::error::CoyoteError;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
+use super::language::Language;
+use super::level::Level;
 use crate::utils::time::diff_date;
 use crate::{
   custom::{
@@ -25,7 +27,6 @@ use crate::{
     traits::StringLoader,
   },
 };
-use super::level::Level;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -34,7 +35,7 @@ use super::level::Level;
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Card {
   #[new(default)]
-  pub lang: String,
+  pub lang: Language,
 
   #[new(default)]
   pub item: String,
