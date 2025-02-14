@@ -14,7 +14,7 @@ use strum_macros::EnumIter;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#[derive(Debug, AsExpression, FromSqlRow, Deserialize, Serialize, EnumIter)]
+#[derive(Debug, Clone, AsExpression, FromSqlRow, Deserialize, Serialize, EnumIter)]
 #[diesel(sql_type = Text)]
 pub enum Level {
   A1,
