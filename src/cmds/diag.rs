@@ -43,7 +43,7 @@ fn diagnose(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
     println!("{}", level);
 
     // initialize score
-    // let level_score = Score::new(level);
+    let mut level_score = Score::new(level.clone());
 
     // retrieve from database
     let mut cards = get_memory(conn, &lang, &level.to_string())?;
@@ -68,14 +68,19 @@ fn diagnose(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
           match event.code {
             KeyCode::Enter => {
               print!("\n{}\n", TRAIN_SUCCESS[rng.random_range(0..TRAIN_SUCCESS.len())].bright_green());
+              level_score.increase_count()?;
+              level_score.increase_total()?;
             }
 
             KeyCode::Char(' ') => {
               print!("\n{}\n", TRAIN_FAILURE[rng.random_range(0..TRAIN_FAILURE.len())].bright_red());
+              level_score.increase_total()?;
             }
 
             KeyCode::Char('q') => {
               println!("Exiting...");
+              level_score.calculate_score()?;
+              println!("The score for level: {} is {}", level, level_score.score);
               break;
             }
 
@@ -86,14 +91,11 @@ fn diagnose(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
 
       // disable raw mode
       terminal::disable_raw_mode()?;
-
-      // update scores
-      card.update_score(conn)?;
-      print!(
-        "\nQuality: {}, Repetitions: {}, Interval: {}, Ease Factor: {:.2}\n",
-        card.quality, card.repetitions, card.interval, card.difficulty
-      );
     }
+
+    // update scores
+    level_score.calculate_score()?;
+    println!("The score for level: {} is {}", level, level_score.score);
 
     // disable raw mode
     terminal::disable_raw_mode()?;
