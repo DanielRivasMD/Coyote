@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // standard libraries
-use anyhow::{Result as anyResult};
+use anyhow::Result as anyResult;
 use colored::*;
 use crossterm::{
   event::{self, Event, KeyCode},
@@ -18,9 +18,9 @@ use strum::IntoEnumIterator;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, utils::sql::get_memory};
-use crate::utils::sql::set_conn_db;
 use crate::custom::level::Level;
+use crate::utils::sql::set_conn_db;
+use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, utils::sql::get_memory};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
