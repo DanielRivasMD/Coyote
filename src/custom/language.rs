@@ -17,6 +17,7 @@ use strum_macros::EnumIter;
 #[derive(Debug, AsExpression, FromSqlRow, Deserialize, Serialize, EnumIter)]
 #[diesel(sql_type = Text)]
 pub enum Language {
+  English,
   Espanol,
   Francais,
   Italiano,
@@ -27,7 +28,7 @@ pub enum Language {
 
 impl Default for Language {
   fn default() -> Self {
-    Language::Italiano
+    Language::English
   }
 }
 
@@ -39,6 +40,7 @@ impl fmt::Display for Language {
     f: &mut fmt::Formatter<'_>,
   ) -> fmt::Result {
     match self {
+      Language::English => write!(f, "English"),
       Language::Espanol => write!(f, "Espanol"),
       Language::Francais => write!(f, "Francais"),
       Language::Italiano => write!(f, "Italiano"),
@@ -52,6 +54,7 @@ impl TryFrom<&str> for Language {
 
   fn try_from(value: &str) -> Result<Self, Self::Error> {
     match value {
+      "English" => Ok(Language::English),
       "Espanol" => Ok(Language::Espanol),
       "Francais" => Ok(Language::Francais),
       "Italiano" => Ok(Language::Italiano),
@@ -66,6 +69,7 @@ impl TryFrom<String> for Language {
 
   fn try_from(value: String) -> Result<Self, Self::Error> {
     match value.as_str() {
+      "English" => Ok(Language::English),
       "Espanol" => Ok(Language::Espanol),
       "Francais" => Ok(Language::Francais),
       "Italiano" => Ok(Language::Italiano),
