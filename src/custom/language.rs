@@ -17,9 +17,10 @@ use strum_macros::EnumIter;
 #[derive(Debug, AsExpression, FromSqlRow, Deserialize, Serialize, EnumIter)]
 #[diesel(sql_type = Text)]
 pub enum Language {
+  Espanol,
+  Francais,
   Italiano,
   Norsk,
-  Francais,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,9 +39,10 @@ impl fmt::Display for Language {
     f: &mut fmt::Formatter<'_>,
   ) -> fmt::Result {
     match self {
+      Language::Espanol => write!(f, "Espanol"),
+      Language::Francais => write!(f, "Francais"),
       Language::Italiano => write!(f, "Italiano"),
       Language::Norsk => write!(f, "Norsk"),
-      Language::Francais => write!(f, "Francais"),
     }
   }
 }
@@ -50,9 +52,10 @@ impl TryFrom<&str> for Language {
 
   fn try_from(value: &str) -> Result<Self, Self::Error> {
     match value {
+      "Espanol" => Ok(Language::Espanol),
+      "Francais" => Ok(Language::Francais),
       "Italiano" => Ok(Language::Italiano),
       "Norsk" => Ok(Language::Norsk),
-      "Francais" => Ok(Language::Francais),
       _ => Err(format!("Invalid language: {}", value)),
     }
   }
@@ -63,9 +66,10 @@ impl TryFrom<String> for Language {
 
   fn try_from(value: String) -> Result<Self, Self::Error> {
     match value.as_str() {
+      "Espanol" => Ok(Language::Espanol),
+      "Francais" => Ok(Language::Francais),
       "Italiano" => Ok(Language::Italiano),
       "Norsk" => Ok(Language::Norsk),
-      "Francais" => Ok(Language::Francais),
       _ => Err(format!("Invalid language: {}", value)),
     }
   }
