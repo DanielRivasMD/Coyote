@@ -54,11 +54,11 @@ impl TryFrom<&str> for Language {
 
   fn try_from(value: &str) -> Result<Self, Self::Error> {
     match value {
-      "English" => Ok(Language::English),
-      "Espanol" => Ok(Language::Espanol),
-      "Francais" => Ok(Language::Francais),
-      "Italiano" => Ok(Language::Italiano),
-      "Norsk" => Ok(Language::Norsk),
+      "en" | "EN" | "english" | "English" => Ok(Language::English),
+      "es" | "ES" | "espanol" | "Espanol" => Ok(Language::Espanol),
+      "fr" | "FR" | "francais" | "Francais" => Ok(Language::Francais),
+      "it" | "IT" | "italiano" | "Italiano" => Ok(Language::Italiano),
+      "no" | "NO" | "norsk" | "Norsk" => Ok(Language::Norsk),
       _ => Err(format!("Invalid language: {}", value)),
     }
   }
@@ -69,11 +69,11 @@ impl TryFrom<String> for Language {
 
   fn try_from(value: String) -> Result<Self, Self::Error> {
     match value.as_str() {
-      "English" => Ok(Language::English),
-      "Espanol" => Ok(Language::Espanol),
-      "Francais" => Ok(Language::Francais),
-      "Italiano" => Ok(Language::Italiano),
-      "Norsk" => Ok(Language::Norsk),
+      "en" | "EN" | "english" | "English" => Ok(Language::English),
+      "es" | "ES" | "espanol" | "Espanol" => Ok(Language::Espanol),
+      "fr" | "FR" | "francais" | "Francais" => Ok(Language::Francais),
+      "it" | "IT" | "italiano" | "Italiano" => Ok(Language::Italiano),
+      "no" | "NO" | "norsk" | "Norsk" => Ok(Language::Norsk),
       _ => Err(format!("Invalid language: {}", value)),
     }
   }
