@@ -31,7 +31,7 @@ pub fn load(
   let conn = set_conn_db()?;
 
   // read input
-  read_load(conn, input.to_path_buf(), lang)?;
+  read_load(conn, input.to_path_buf(), Language::try_from(lang).unwrap())?;
 
   Ok(())
 }
@@ -41,7 +41,7 @@ pub fn load(
 fn read_load(
   mut conn: SqliteConnection,
   file: PathBuf,
-  lang: String,
+  lang: Language,
 ) -> anyResult<()> {
   // read input
   let mut lines = byte_read_io(file)?;
@@ -56,7 +56,7 @@ fn read_load(
     let mut card = Card::load_from_str(fields.clone())?;
 
     // load from argument
-    card.lang = Language::try_from(lang.clone()).unwrap();
+    card.lang = lang.clone();
 
     // insert to database
     insert_struct(card, &mut conn)?;

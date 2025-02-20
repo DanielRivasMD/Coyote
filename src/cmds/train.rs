@@ -13,7 +13,7 @@ use rand::{Rng, rng, seq::SliceRandom};
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // error handler
-use crate::utils::error::CoyoteError;
+use crate::{custom::language::Language, utils::error::CoyoteError};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +28,7 @@ pub fn train(lang: String) -> anyResult<()> {
   let conn = &mut set_conn_db()?;
 
   // train logic
-  training(conn, lang)?;
+  training(conn, Language::try_from(lang).unwrap())?;
 
   Ok(())
 }
@@ -37,9 +37,9 @@ pub fn train(lang: String) -> anyResult<()> {
 
 // TODO: review & update training algorithm
 #[rustfmt::skip]
-fn training(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
+fn training(conn: &mut SqliteConnection, lang: Language) -> anyResult<()> {
   // retrieve from database
-  let mut cards = get_memory(conn, &lang, "A1")?;
+  let mut cards = get_memory(conn, &lang.to_string(), "A1")?;
 
   // create random number generator
   let mut rng = rng();

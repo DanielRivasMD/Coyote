@@ -18,7 +18,7 @@ use strum::IntoEnumIterator;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::custom::{level::Level, score::Score};
+use crate::custom::{language::Language, level::Level, score::Score};
 use crate::utils::sql::set_conn_db;
 use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, utils::sql::get_memory};
 
@@ -29,7 +29,7 @@ pub fn diag(lang: String) -> anyResult<()> {
   let conn = &mut set_conn_db()?;
 
   // diagnose logic
-  diagnose(conn, lang)?;
+  diagnose(conn, Language::try_from(lang).unwrap())?;
 
   Ok(())
 }
@@ -37,7 +37,7 @@ pub fn diag(lang: String) -> anyResult<()> {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #[rustfmt::skip]
-fn diagnose(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
+fn diagnose(conn: &mut SqliteConnection, lang: Language) -> anyResult<()> {
 
   // preallocate scores
   let mut scores = vec![];
@@ -51,7 +51,7 @@ fn diagnose(conn: &mut SqliteConnection, lang: String) -> anyResult<()> {
     let mut level_score = Score::new(level.clone());
 
     // retrieve from database
-    let mut cards = get_memory(conn, &lang, &level.to_string())?;
+    let mut cards = get_memory(conn, &lang.to_string(), &level.to_string())?;
 
     // create random number generator
     let mut rng = rng();
