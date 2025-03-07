@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS memory (
   difficulty TEXT,
   repetitions TEXT,
   interval TEXT,
+  class TEXT,
   level TEXT
 );
 
