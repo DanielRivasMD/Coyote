@@ -56,6 +56,9 @@ pub struct Card {
   pub interval: String,
 
   #[new(default)]
+  pub class: String,
+
+  #[new(default)]
   pub level: Level,
 }
 
