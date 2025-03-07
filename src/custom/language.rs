@@ -22,6 +22,7 @@ pub enum Language {
   Francais,
   Italiano,
   Norsk,
+  Test,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +46,7 @@ impl fmt::Display for Language {
       Language::Francais => write!(f, "Francais"),
       Language::Italiano => write!(f, "Italiano"),
       Language::Norsk => write!(f, "Norsk"),
+      Language::Test => write!(f, "Test"),
     }
   }
 }
@@ -59,6 +61,7 @@ impl TryFrom<&str> for Language {
       "fr" | "FR" | "francais" | "Francais" => Ok(Language::Francais),
       "it" | "IT" | "italiano" | "Italiano" => Ok(Language::Italiano),
       "no" | "NO" | "norsk" | "Norsk" => Ok(Language::Norsk),
+      "ts" | "TS" | "test" | "Test" => Ok(Language::Test),
       _ => Err(format!("Invalid language: {}", value)),
     }
   }
@@ -74,6 +77,7 @@ impl TryFrom<String> for Language {
       "fr" | "FR" | "francais" | "Francais" => Ok(Language::Francais),
       "it" | "IT" | "italiano" | "Italiano" => Ok(Language::Italiano),
       "no" | "NO" | "norsk" | "Norsk" => Ok(Language::Norsk),
+      "ts" | "TS" | "test" | "Test" => Ok(Language::Test),
       _ => Err(format!("Invalid language: {}", value)),
     }
   }
