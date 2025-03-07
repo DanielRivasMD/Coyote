@@ -54,6 +54,7 @@ fn read_load(
 
     // load from line
     let mut card = Card::load_from_str(fields.clone())?;
+    println!("{:?}", card);
 
     // load from argument
     card.lang = lang.clone();

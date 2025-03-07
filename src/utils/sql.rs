@@ -36,6 +36,7 @@ pub fn insert_struct(
   card: Card,
   conn: &mut SqliteConnection,
 ) -> anyResult<()> {
+  println!("{:?}", card);
   insert_into(memory).values(&card).execute(conn)?;
   Ok(())
 }
@@ -50,7 +51,7 @@ pub fn get_memory(
 ) -> anyResult<Vec<Card>> {
   let results: Vec<Card> = memory
     .filter(lang.eq(filter_lang))
-    .filter(interval.lt(current_date()))
+    // .filter(interval.lt(current_date()))
     .filter(level.eq(filter_level))
     // .select((item, example, misc, quality, difficulty, interval, repetitions))
     .select(Card::as_select())
