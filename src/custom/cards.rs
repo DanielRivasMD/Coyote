@@ -159,6 +159,19 @@ impl StringLoader for Card {
     // update fields
     self.update_item(fields[0].into())?;
     self.update_example(fields[1].into())?;
+    self.update_class(fields[2].into())?;
+    self.update_level(fields[3].into())?;
+    Ok(())
+  }
+}
+
+// implement update level manually
+impl Card {
+  fn update_level(
+    &mut self,
+    flines: &str,
+  ) -> anyResult<()> {
+    self.level = Level::try_from(flines).unwrap();
     Ok(())
   }
 }
@@ -170,6 +183,7 @@ daedalus!(
   pub, Card;
   item; get_item_owned, get_item_ref, update_item - String, &str
   example; get_example_owned, get_example_ref, update_example - String, &str
+  class; get_class_owned, get_class_ref, update_class - String, &str
 );
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
