@@ -1,3 +1,15 @@
+- debug types => MVP
+- add tests
+
+- features:
+  anki-like algorithm
+  level diagnostics
+  historic reports & graphs
+  front-end => mobile app / web app
+
+
+- integrate Manfred llm-like architecture to generate text
+
 ### Milestones
 - done  cli architecture
 - done  raw file reader
@@ -18,3 +30,14 @@
           read  => read manual inputs & upload to database
           train => practice your memory skills
           diag  => diagnose your current level & based on structured learning
+
+==================================================
+src/cmds/read.rs
+  line 22     TODO   update read cmd
+src/cmds/train.rs
+  line 38     TODO   review & update training algorithm
+src/coyote.rs
+  line 23     TODO   consider changing to static
+src/custom/cards.rs
+  line 69     TODO   review update logic carefully & document it
+==================================================
