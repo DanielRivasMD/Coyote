@@ -1,0 +1,62 @@
+word,example,type,level,synonym
+casa,La casa es grande.,noun,A1,vivienda
+perro,El perro corre en el parque.,noun,A1,can
+gato,El gato está durmiendo.,noun,A1,minino
+libro,Leo un libro interesante.,noun,A1,volumen
+mesa,La mesa está en la cocina.,noun,A1,tabla
+silla,La silla es cómoda.,noun,A1,asiento
+ventana,La ventana está abierta.,noun,A1,cristal
+puerta,Cierra la puerta, por favor.,noun,A1,portón
+cielo,El cielo está despejado.,noun,A1,firmamento
+sol,El sol brilla mucho hoy.,noun,A1,astro
+luna,La luna es bonita esta noche.,noun,A1,satélite
+agua,Bebo agua todos los días.,noun,A1,líquido
+comida,La comida está deliciosa.,noun,A1,alimento
+pan,El pan está fresco.,noun,A1,barra
+leche,La leche es buena para la salud.,noun,A1,lácteo
+manzana,Como una manzana cada día.,noun,A1,fruta
+naranja,La naranja es jugosa.,noun,A1,cítrico
+plátano,El plátano es dulce.,noun,A1,banana
+coche,El coche es rápido.,noun,A1,automóvil
+bicicleta,Montar en bicicleta es divertido.,noun,A1,bici
+calle,La calle está muy transitada.,noun,A1,avenida
+parque,El parque es muy grande.,noun,A1,jardín
+escuela,Voy a la escuela todos los días.,noun,A1,colegio
+profesor,El profesor explica muy bien.,noun,A1,maestro
+estudiante,El estudiante estudia mucho.,noun,A1,alumno
+familia,La familia es muy importante.,noun,A1,parentela
+amigo,Mi amigo es muy simpático.,noun,A1,compañero
+trabajo,El trabajo es duro.,noun,A1,empleo
+tienda,Voy a la tienda a comprar pan.,noun,A1,comercio
+dinero,Necesito dinero para comprar.,noun,A1,efectivo
+correr,Me gusta correr por la mañana.,verb,A1,trotar
+caminar,Camino al trabajo todos los días.,verb,A1,andar
+hablar,Ella habla español muy bien.,verb,A1,conversar
+escuchar,Me gusta escuchar música.,verb,A1,oír
+leer,Leo un libro cada noche.,verb,A1,estudiar
+escribir,Ella escribe una carta.,verb,A1,redactar
+comer,Voy a comer una manzana.,verb,A1,ingerir
+beber,Bebo agua todos los días.,verb,A1,tomar
+dormir,El bebé duerme toda la noche.,verb,A1,descansar
+vivir,Vivo en una casa grande.,verb,A1,residir
+trabajar,Trabajo en una oficina.,verb,A1,laborar
+estudiar,Estudio español todos los días.,verb,A1,aprender
+jugar,Los niños juegan en el parque.,verb,A1,divertirse
+grande,El elefante es muy grande.,adjective,A1,enorme
+pequeño,El niño es pequeño.,adjective,A1,chico
+alto,El edificio es muy alto.,adjective,A1,elevado
+bajo,La mesa es baja.,adjective,A1,corto
+feliz,Estoy muy feliz hoy.,adjective,A1,contento
+triste,Estoy triste porque llueve.,adjective,A1,apenado
+rápido,El coche es rápido.,adjective,A1,veloz
+lento,El tren es lento.,adjective,A1,pausado
+bonito,El vestido es bonito.,adjective,A1,hermoso
+feo,El monstruo es feo.,adjective,A1,horrible
+caliente,El café está caliente.,adjective,A1,ardiente
+frío,El hielo está frío.,adjective,A1,helado
+nuevo,El coche es nuevo.,adjective,A1,moderno
+viejo,El libro es viejo.,adjective,A1,antiguo
+fácil,El examen es fácil.,adjective,A1,sencillo
+difícil,El problema es difícil.,adjective,A1,complicado
+barato,El pan es barato.,adjective,A1,económico
+caro,El oro es caro.,adjective,A1,costoso
