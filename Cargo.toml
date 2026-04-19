@@ -1,9 +1,7 @@
 [package]
 name = "Coyote"
 version = "0.1.0"
-authors = [
-  "Daniel Rivas <danielrivasmd@gmail.com>"
-]
+authors = ["Daniel Rivas <danielrivasmd@gmail.com>"]
 repository = "https://github.com/DanielRivasMD/Coyote"
 keywords = []
 categories = []
@@ -29,7 +27,12 @@ colored = "2.1.0"
 chrono = { version = "0.4", features = ["serde"] }
 crossterm = "0.28.1"
 derive-new = "0.7.0"
-diesel = { version = "2.2.4", features = ["sqlite", "chrono", "returning_clauses_for_sqlite_3_35", "r2d2"] }
+diesel = { version = "2.2.4", features = [
+  "sqlite",
+  "chrono",
+  "returning_clauses_for_sqlite_3_35",
+  "r2d2",
+] }
 dotenvy = "0.15"
 rand = "0.9.0"
 serde = { version = "1.0", features = ["derive"] }
@@ -39,28 +42,28 @@ thiserror = "1.0.64"
 
 
 [profile.dev]
-opt-level        = 0
-debug            = true
-rpath            = false
-lto              = false
+opt-level = 0
+debug = true
+rpath = false
+lto = false
 debug-assertions = true
-codegen-units    = 1
+codegen-units = 1
 
 
 [profile.release]
-strip            = true
-opt-level        = 3
-debug            = false
-rpath            = false
-lto              = true
+strip = true
+opt-level = 3
+debug = false
+rpath = false
+lto = true
 debug-assertions = false
-codegen-units    = 1
+codegen-units = 1
 
 
 [profile.test]
-opt-level        = 3
-debug            = false
-rpath            = false
-lto              = false
+opt-level = 3
+debug = false
+rpath = false
+lto = false
 debug-assertions = false
-codegen-units    = 1
+codegen-units = 1
