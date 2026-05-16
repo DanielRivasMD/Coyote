@@ -1,14 +1,15 @@
+- fix critical bugs in space-repetition algorithm
+
 - debug types => MVP
 - add tests
 
-- features:
-  anki-like algorithm
-  level diagnostics
-  historic reports & graphs
-  front-end => mobile app / web app
+features:
+  - anki-like algorithm
+  - level diagnostics
+  - historic reports & graphs
+  - front-end => mobile app / web app
 
 
-- integrate Manfred llm-like architecture to generate text
 
 ### Milestones
 - done  cli architecture
