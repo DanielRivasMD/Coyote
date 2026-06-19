@@ -107,8 +107,11 @@ fn diagnose(conn: &mut SqliteConnection, lang: Language) -> anyResult<()> {
     terminal::disable_raw_mode()?;
 
     // prevent next level
-    if scores[scores.len()].1 < 0.75 { break }
-
+    if let Some(last) = scores.last() {
+        if last.1 < 0.75 {
+            break;
+        }
+    }
   }
 
   Ok(())
