@@ -11,6 +11,36 @@ features:
 
 
 
+Strengths:
+- modular architecture
+- SQLite with migrations
+- custom macros (daedalus, talus) reduce boilerplate
+- interactive terminal interface
+- support for multiple languages & CEFR levels
+
+Weaknesses:
+- Critical bug in diag.rs: scores[scores.len()].1 indexes out of bounds (should be len()-1).
+- Spaced‑repetition algorithm is fundamentally broken: the schema stores interval as a date string, not a number of days. The update_score method treats it as a date, computes next interval incorrectly, and misapplies the SM‑2 formula for ease factor (difficulty).
+- State inconsistency: set_field updates the database but never updates the in‑memory Card fields, so printed values after training are stale.
+- Poor row identification: database updates match on item text, not a unique ID; duplicates will cause wrong updates.
+- Hardcoded assumptions: CSV loader expects exactly four fields without validation; no language field in file format, leading to default language override.
+- Exit handling: pressing q during diagnosis only breaks the inner loop and continues with other levels instead of exiting the command.
+- Multiple redundant parses of the same string in update_score, impacting performance and readability.
+- Incomplete read command: only prompts for two fields, ignores others like class or level.
+
+Enhancements:
+- Redesign schema to store interval as an integer (days) and compute due dates dynamically
+- Fix the SM‑2 implementation to match the published algorithm
+- Add a unique primary key (e.g., UUID) for safe updates; update local struct after DB writes
+- Validate CSV input and include all fields (language, level) in the file
+- Improve CLI exit logic with a flag to halt the entire diagnosis session
+- Add integration tests covering algorithm correctness and database operations
+- Provide interactive prompts for language/level selection during read
+
+Usefulness:
+
+
+
 ### Milestones
 - done  cli architecture
 - done  raw file reader
