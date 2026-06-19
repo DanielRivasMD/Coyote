@@ -1,19 +1,20 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 diesel::table! {
-  memory {
-    id -> Integer,
-    lang -> Text,
-    item -> Text,
-    example -> Text,
-    kind -> Text,
-    quality -> Text,
-    difficulty -> Text,
-    repetitions -> Text,
-    interval -> Text,
-    class -> Text,
-    level -> Text,
-  }
+    memory {
+        id -> Integer,
+        lang -> Text,
+        item -> Text,
+        example -> Text,
+        kind -> Text,
+        quality -> Text,
+        difficulty -> Text,
+        repetitions -> Text,
+        interval -> Text,
+        interval_days -> Integer,
+        class -> Text,
+        level -> Text,
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
