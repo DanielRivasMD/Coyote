@@ -12,11 +12,11 @@ use clap::Parser;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::cmds::diag::diag;
-use crate::cmds::load::load;
-use crate::cmds::read::read;
-use crate::cmds::train::train;
-use crate::utils::help::*;
+use crate::cmd::diag::diag;
+use crate::cmd::load::load;
+use crate::cmd::read::read;
+use crate::cmd::train::train;
+use crate::util::help::*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

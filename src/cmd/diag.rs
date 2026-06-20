@@ -19,8 +19,8 @@ use strum::IntoEnumIterator;
 
 // crate utilities
 use crate::custom::{language::Language, level::Level, score::Score};
-use crate::utils::sql::set_conn_db;
-use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, utils::sql::get_memory};
+use crate::util::sql::set_conn_db;
+use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, util::sql::get_memory};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

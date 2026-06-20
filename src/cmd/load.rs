@@ -8,8 +8,8 @@ use std::path::PathBuf;
 
 use crate::custom::cards::Card;
 use crate::custom::language::Language;
-use crate::utils::io::byte_read_io;
-use crate::utils::sql::{insert_struct, set_conn_db};
+use crate::util::io::byte_read_io;
+use crate::util::sql::{insert_struct, set_conn_db};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

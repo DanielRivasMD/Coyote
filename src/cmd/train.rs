@@ -13,13 +13,13 @@ use rand::{Rng, rng, seq::SliceRandom};
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // error handler
-use crate::{custom::language::Language, utils::error::CoyoteError};
+use crate::{custom::language::Language, util::error::CoyoteError};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // crate utilities
-use crate::utils::sql::set_conn_db;
-use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, custom::fields::Fields, utils::sql::get_memory};
+use crate::util::sql::set_conn_db;
+use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, custom::fields::Fields, util::sql::get_memory};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
