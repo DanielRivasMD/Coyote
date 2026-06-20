@@ -1,18 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// standard libraries
 use anyhow::{Context, Result as anyResult};
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// error handler
 use crate::util::error::CoyoteError;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// crate utilities
 use crate::custom::fields::Fields;
 use crate::custom::language::Language;
 use crate::custom::level::Level;
@@ -70,7 +67,6 @@ pub struct Card {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 impl Card {
-    // TODO: review update logic carefully & document it
     pub fn update_score(&mut self, conn: &mut SqliteConnection) -> anyResult<()> {
         // Parse numeric fields once
         let q: u32 = self.quality.parse().context(CoyoteError::Parsing {

@@ -1,15 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// standard libraries
 use anyhow::Result as anyResult;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// error handler
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// crate utilities
 use crate::custom::level::Level;
 use crate::daedalus;
 
@@ -17,25 +11,25 @@ use crate::daedalus;
 
 #[derive(new, Debug)]
 pub struct Score {
-  pub level: Level,
+    pub level: Level,
 
-  #[new(default)]
-  pub count: u32,
+    #[new(default)]
+    pub count: u32,
 
-  #[new(default)]
-  pub total: u32,
+    #[new(default)]
+    pub total: u32,
 
-  #[new(default)]
-  pub score: f64,
+    #[new(default)]
+    pub score: f64,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 impl Score {
-  pub fn calculate_score(&mut self) -> anyResult<f64> {
-    self.score = self.count as f64 / self.total as f64;
-    Ok(self.score)
-  }
+    pub fn calculate_score(&mut self) -> anyResult<f64> {
+        self.score = self.count as f64 / self.total as f64;
+        Ok(self.score)
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

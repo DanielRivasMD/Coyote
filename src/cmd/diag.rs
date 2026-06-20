@@ -1,23 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// standard libraries
 use anyhow::Result as anyResult;
 use colored::*;
-use crossterm::{
-    event::{self, Event, KeyCode},
-    terminal::{self},
-};
+use crossterm::event::{self, Event, KeyCode};
+use crossterm::terminal::{self};
 use diesel::SqliteConnection;
 use rand::{Rng, rng, seq::SliceRandom};
 use strum::IntoEnumIterator;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// error handler
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// crate utilities
 use crate::custom::{language::Language, level::Level, score::Score};
 use crate::util::sql::set_conn_db;
 use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, util::sql::get_memory};
@@ -25,12 +17,8 @@ use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, util::sql::get_memory};
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 pub fn diag(lang: String) -> anyResult<()> {
-    // set connection
     let conn = &mut set_conn_db()?;
-
-    // diagnose logic
     diagnose(conn, Language::try_from(lang).unwrap())?;
-
     Ok(())
 }
 

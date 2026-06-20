@@ -1,41 +1,31 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// standard libraries
 use anyhow::{Context, Result as anyResult};
 use colored::*;
-use crossterm::{
-  event::{self, Event, KeyCode},
-  terminal::{self},
-};
+use crossterm::event::{self, Event, KeyCode};
+use crossterm::terminal::{self};
 use diesel::SqliteConnection;
 use rand::{Rng, rng, seq::SliceRandom};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// error handler
 use crate::{custom::language::Language, util::error::CoyoteError};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// crate utilities
 use crate::util::sql::set_conn_db;
 use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, custom::fields::Fields, util::sql::get_memory};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 pub fn train(lang: String) -> anyResult<()> {
-  // set connection
-  let conn = &mut set_conn_db()?;
-
-  // train logic
-  training(conn, Language::try_from(lang).unwrap())?;
-
-  Ok(())
+    let conn = &mut set_conn_db()?;
+    training(conn, Language::try_from(lang).unwrap())?;
+    Ok(())
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO: review & update training algorithm
 #[rustfmt::skip]
 fn training(conn: &mut SqliteConnection, lang: Language) -> anyResult<()> {
   // retrieve from database

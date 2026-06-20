@@ -5,7 +5,7 @@ use std::path::PathBuf;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use crate::custom::log_flag::LogFlag;
+use crate::custom::log;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,17 +13,17 @@ use crate::custom::log_flag::LogFlag;
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
     #[command(subcommand)]
-    pub command: Commands,
+    pub command: Command,
 
     /// Logging level
-    #[arg(short, long, value_enum, default_value_t = LogFlag::Info)]
-    pub log: LogFlag,
+    #[arg(short, long, value_enum, default_value_t = log::LogFlag::Info)]
+    pub log: log::LogFlag,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #[derive(Subcommand)]
-pub enum Commands {
+pub enum Command {
     /// Read input from user for training
     Read {
         /// Language to use (optional)
