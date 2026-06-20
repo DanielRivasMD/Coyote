@@ -11,7 +11,7 @@ edition = "2024"
 
 [[bin]]
 name = "coyote"
-path = "src/bin/coyote.rs"
+path = "src/main.rs"
 
 
 [lib]
