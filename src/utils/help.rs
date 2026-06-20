@@ -14,45 +14,49 @@ use crate::custom::log_flag::LogFlag;
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
-  #[command(subcommand)]
-  pub command: Commands,
+    #[command(subcommand)]
+    pub command: Commands,
 
-  /// Logging level
-  #[arg(short, long, value_enum, default_value_t = LogFlag::Info)]
-  pub log: LogFlag,
+    /// Logging level
+    #[arg(short, long, value_enum, default_value_t = LogFlag::Info)]
+    pub log: LogFlag,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #[derive(Subcommand)]
 pub enum Commands {
-  /// Read input from user for training
-  Read {},
+    /// Read input from user for training
+    Read {
+        /// Language to use (optional)
+        #[arg(long)]
+        lang: Option<String>,
+    },
 
-  /// Load data for training from file
-  Load {
-    /// Input file
-    #[arg(long)]
-    input: PathBuf,
+    /// Load data for training from file
+    Load {
+        /// Input file
+        #[arg(long)]
+        input: PathBuf,
 
-    /// Language to load
-    #[arg(long)]
-    lang: String,
-  },
+        /// Language to load
+        #[arg(long)]
+        lang: String,
+    },
 
-  /// Train your skills
-  Train {
-    /// Language to train
-    #[arg(long)]
-    lang: String,
-  },
+    /// Train your skills
+    Train {
+        /// Language to train
+        #[arg(long)]
+        lang: String,
+    },
 
-  /// Diagnose your skill level
-  Diag {
-    /// Language to diagnose
-    #[arg(long)]
-    lang: String,
-  }
+    /// Diagnose your skill level
+    Diag {
+        /// Language to diagnose
+        #[arg(long)]
+        lang: String,
+    },
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

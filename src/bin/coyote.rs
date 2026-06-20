@@ -21,29 +21,29 @@ use crate::utils::help::*;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fn main() -> anyResult<()> {
-  // collect command line arguments
-  let params = Cli::parse();
+    // collect command line arguments
+    let params = Cli::parse();
 
-  // match sub commands
-  match &params.command {
-    Commands::Read {} => {
-      read()?;
+    // match sub commands
+    match &params.command {
+        Commands::Read { lang } => {
+            read(lang.clone())?;
+        }
+
+        Commands::Load { input, lang } => {
+            load(input, lang.clone())?;
+        }
+
+        Commands::Train { lang } => {
+            train(lang.clone())?;
+        }
+
+        Commands::Diag { lang } => {
+            diag(lang.clone())?;
+        }
     }
 
-    Commands::Load { input, lang } => {
-      load(input, lang.clone())?;
-    }
-
-    Commands::Train { lang } => {
-      train(lang.clone())?;
-    }
-
-    Commands::Diag { lang } => {
-      diag(lang.clone())?;
-    }
-  }
-
-  Ok(())
+    Ok(())
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
