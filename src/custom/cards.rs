@@ -151,25 +151,27 @@ impl Card {
     {
         match column {
             Fields::Quality => {
-                diesel::update(memory.filter(id.eq(self.id)))
+                let updated = diesel::update(memory.filter(id.eq(self.id)))
                     .set(quality.eq(lambda(value, factor).to_string()))
                     .returning(Card::as_returning())
                     .get_result(conn)
                     .context(CoyoteError::DatabaseUpdate {
                         f: self.item.clone(),
                     })?;
+                *self = updated;
             }
             Fields::Difficulty => {
-                diesel::update(memory.filter(id.eq(self.id)))
+                let updated = diesel::update(memory.filter(id.eq(self.id)))
                     .set(difficulty.eq(lambda(value, factor).to_string()))
                     .returning(Card::as_returning())
                     .get_result::<Card>(conn)
                     .context(CoyoteError::DatabaseUpdate {
                         f: self.item.clone(),
                     })?;
+                *self = updated;
             }
             Fields::Interval => {
-                diesel::update(memory.filter(id.eq(self.id)))
+                let updated = diesel::update(memory.filter(id.eq(self.id)))
                     .set(interval.eq(delta_date(
                         current_date(),
                         lambda(value, factor).to_string(),
@@ -179,15 +181,17 @@ impl Card {
                     .context(CoyoteError::DatabaseUpdate {
                         f: self.item.clone(),
                     })?;
+                *self = updated;
             }
             Fields::Repetitions => {
-                diesel::update(memory.filter(id.eq(self.id)))
+                let updated = diesel::update(memory.filter(id.eq(self.id)))
                     .set(repetitions.eq(lambda(value, factor).to_string()))
                     .returning(Card::as_returning())
                     .get_result::<Card>(conn)
                     .context(CoyoteError::DatabaseUpdate {
                         f: self.item.clone(),
                     })?;
+                *self = updated;
             }
         };
 
