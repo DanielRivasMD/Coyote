@@ -1,69 +1,109 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// standard libraries
 use anyhow::Result as anyResult;
 use diesel::SqliteConnection;
 use std::path::PathBuf;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// error handler
+use crate::custom::cards::Card;
+use crate::custom::language::Language;
+use crate::utils::io::byte_read_io;
+use crate::utils::sql::{insert_struct, set_conn_db};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// crate utilities
-use crate::utils::traits::StringLoader;
-use crate::{
-  custom::{cards::Card, language::Language},
-  utils::{
-    io::byte_read_io,
-    sql::{insert_struct, set_conn_db},
-  },
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-pub fn load(
-  input: &PathBuf,
-  lang: String,
-) -> anyResult<()> {
-  // open database connection
-  let conn = set_conn_db()?;
-
-  // read input
-  read_load(conn, input.to_path_buf(), Language::try_from(lang).unwrap())?;
-
-  Ok(())
+pub fn load(input: &PathBuf, lang: String) -> anyResult<()> {
+    let conn = set_conn_db()?;
+    read_load(conn, input.to_path_buf(), Language::try_from(lang).unwrap())?;
+    Ok(())
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-fn read_load(
-  mut conn: SqliteConnection,
-  file: PathBuf,
-  lang: Language,
-) -> anyResult<()> {
-  // read input
-  let mut lines = byte_read_io(file)?;
+fn read_load(mut conn: SqliteConnection, file: PathBuf, lang: Language) -> anyResult<()> {
+    let mut lines = byte_read_io(file)?;
 
-  // iterate on lines
-  while let Some(line) = lines.next() {
-    // read line
-    let line_read = String::from_utf8_lossy(line?);
-    let fields = line_read.split(',').collect::<Vec<&str>>();
+    // Read the header line
+    let header_line = match lines.next() {
+        Some(Ok(line)) => String::from_utf8_lossy(line).to_string(),
+        Some(Err(e)) => return Err(e.into()),
+        None => return Ok(()), // empty file
+    };
 
-    // load from line
-    let mut card = Card::load_from_str(fields.clone())?;
-    println!("{:?}", card);
+    let headers: Vec<&str> = header_line.split(',').map(|h| h.trim()).collect();
+    let expected_len = headers.len();
 
-    // load from argument
-    card.lang = lang.clone();
+    // Determine positions of known columns
+    let pos_item = headers.iter().position(|&h| h == "item");
+    let pos_example = headers.iter().position(|&h| h == "example");
+    let pos_class = headers.iter().position(|&h| h == "class");
+    let pos_level = headers.iter().position(|&h| h == "level");
+    let pos_lang = headers.iter().position(|&h| h == "lang");
 
-    // insert to database
-    insert_struct(card, &mut conn)?;
-  }
+    // Item and example are mandatory
+    if pos_item.is_none() || pos_example.is_none() {
+        anyhow::bail!("CSV header must contain 'item' and 'example' columns");
+    }
 
-  Ok(())
+    let pos_item = pos_item.unwrap();
+    let pos_example = pos_example.unwrap();
+    let pos_class = pos_class;
+    let pos_level = pos_level;
+    let pos_lang = pos_lang;
+
+    // Process data rows with a manual line counter
+    let mut line_num = 0;
+    while let Some(line_result) = lines.next() {
+        line_num += 1;
+        let line = line_result?;
+        let line_str = String::from_utf8_lossy(line);
+
+        if line_str.trim().is_empty() {
+            continue;
+        }
+
+        let fields: Vec<&str> = line_str.split(',').collect();
+
+        if fields.len() != expected_len {
+            eprintln!(
+                "Warning: line {} has {} fields (expected {}), skipping: {}",
+                line_num + 1, // +1 because line_num counts after header
+                fields.len(),
+                expected_len,
+                line_str
+            );
+            continue;
+        }
+
+        // Extract required fields
+        let item = fields[pos_item].to_string();
+        let example = fields[pos_example].to_string();
+
+        // Build card from extracted fields
+        let mut card = Card::new();
+        card.update_item(item)?;
+        card.update_example(example)?;
+
+        if let Some(p) = pos_class {
+            card.update_class(fields[p].to_string())?;
+        }
+        if let Some(p) = pos_level {
+            card.update_level(fields[p])?;
+        }
+
+        // Language: prefer CSV column, fallback to CLI argument
+        if let Some(p) = pos_lang {
+            card.lang = Language::try_from(fields[p]).map_err(|e| anyhow::anyhow!("{}", e))?;
+        } else {
+            card.lang = lang.clone();
+        }
+
+        println!("{:?}", card);
+        insert_struct(card, &mut conn)?;
+    }
+
+    Ok(())
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

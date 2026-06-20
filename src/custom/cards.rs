@@ -218,7 +218,7 @@ impl StringLoader for Card {
 
 // implement update level manually
 impl Card {
-    fn update_level(&mut self, flines: &str) -> anyResult<()> {
+    pub fn update_level(&mut self, flines: &str) -> anyResult<()> {
         self.level = Level::try_from(flines).unwrap();
         Ok(())
     }
