@@ -5,7 +5,7 @@ pub mod cards;
 pub mod fields;
 pub mod language;
 pub mod level;
-pub mod log_flag;
+pub mod log;
 pub mod schema;
 pub mod score;
 
