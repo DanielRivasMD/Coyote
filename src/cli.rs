@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, ValueEnum};
 use std::path::PathBuf;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,11 +50,35 @@ pub enum Command {
     },
 
     /// Diagnose your skill level
-    Diag {
+    #[command(aliases = &["dx"])]
+    Diagnose {
         /// Language to diagnose
         #[arg(long)]
         lang: String,
     },
+
+    /// Print identity
+    #[command(hide = true)]
+    #[command(aliases = &["id"])]
+    Identity,
+
+    /// Generate shell completions
+    #[command(hide = true)]
+    Completion {
+        /// Shell for which to generate completions
+        #[arg(value_enum)]
+        shell: Shell,
+    },
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#[derive(Clone, Copy, ValueEnum)]
+pub enum Shell {
+    Bash,
+    Zsh,
+    Fish,
+    Powershell,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
