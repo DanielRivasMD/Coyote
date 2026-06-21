@@ -5,26 +5,28 @@ use colored::*;
 use crossterm::event::{self, Event, KeyCode};
 use crossterm::terminal::{self};
 use diesel::SqliteConnection;
-use rand::{Rng, rng, seq::SliceRandom};
+use rand::{RngExt, rng, seq::SliceRandom};
 use strum::IntoEnumIterator;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use crate::custom::{language::Language, level::Level, score::Score};
-use crate::util::sql::set_conn_db;
-use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, util::sql::get_memory};
+use crate::custom::language::Language;
+use crate::custom::level::Level;
+use crate::custom::score::Score;
+use crate::util::sql;
+use crate::{TRAIN_FAILURE, TRAIN_SUCCESS};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub fn diag(lang: String) -> anyResult<()> {
-    let conn = &mut set_conn_db()?;
-    diagnose(conn, Language::try_from(lang).unwrap())?;
+pub fn run(lang: String) -> anyResult<()> {
+    let conn = &mut sql::set_conn_db()?;
+    dx(conn, Language::try_from(lang).unwrap())?;
     Ok(())
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-fn diagnose(conn: &mut SqliteConnection, lang: Language) -> anyResult<()> {
+fn dx(conn: &mut SqliteConnection, lang: Language) -> anyResult<()> {
     // preallocate scores
     let mut scores = vec![];
     let mut exit_early = false; // <-- new flag
@@ -41,7 +43,7 @@ fn diagnose(conn: &mut SqliteConnection, lang: Language) -> anyResult<()> {
         let mut level_score = Score::new(level.clone());
 
         // retrieve from database
-        let mut cards = get_memory(conn, &lang.to_string(), &level.to_string())?;
+        let mut cards = sql::get_memory(conn, &lang.to_string(), &level.to_string())?;
 
         // create random number generator
         let mut rng = rng();
