@@ -9,30 +9,26 @@ use clap::Parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use crate::cli;
-use crate::cmd::diag::diag;
-use crate::cmd::load::load;
-use crate::cmd::read::read;
-use crate::cmd::train::train;
+use crate::cli::{Cli, Command};
+use crate::cmd::completion;
+use crate::cmd::diagnose;
+use crate::cmd::identity;
+use crate::cmd::load;
+use crate::cmd::read;
+use crate::cmd::train;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fn main() -> anyResult<()> {
-    let params = cli::Cli::parse();
+    let cli = Cli::parse();
 
-    match &params.command {
-        cli::Command::Read { lang } => {
-            read(lang.clone())?;
-        }
-        cli::Command::Load { input, lang } => {
-            load(input, lang.clone())?;
-        }
-        cli::Command::Train { lang } => {
-            train(lang.clone())?;
-        }
-        cli::Command::Diag { lang } => {
-            diag(lang.clone())?;
-        }
+    match cli.command {
+        Command::Read { lang } => read::run(lang.clone())?,
+        Command::Load { input, lang } => load::run(&input, lang.clone())?,
+        Command::Train { lang } => train::run(lang.clone())?,
+        Command::Diagnose { lang } => diagnose::run(lang.clone())?,
+        Command::Identity => identity::run()?,
+        Command::Completion { shell } => completion::run(shell)?,
     }
     Ok(())
 }
