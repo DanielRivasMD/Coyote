@@ -1,5 +1,5 @@
 [package]
-name = "Coyote"
+name = "coyote"
 version = "0.1.0"
 authors = ["Daniel Rivas <danielrivasmd@gmail.com>"]
 repository = "https://github.com/DanielRivasMD/Coyote"
@@ -9,10 +9,6 @@ readme = "README.md"
 description = ""
 edition = "2024"
 
-[[bin]]
-name = "coyote"
-path = "src/main.rs"
-
 
 [lib]
 name = "coyote"
@@ -20,50 +16,23 @@ path = "src/coyote.rs"
 
 
 [dependencies]
-anyhow = "1.0.89"
-bytelines = "2.5.0"
-clap = { version = "4.4.3", features = ["derive"] }
-colored = "2.1.0"
+anyhow = "1"
+bytelines = "2"
 chrono = { version = "0.4", features = ["serde"] }
-crossterm = "0.28.1"
-derive-new = "0.7.0"
-diesel = { version = "2.2.4", features = [
+clap = { version = "4", features = ["derive"] }
+clap_complete = "4"
+colored = "3"
+crossterm = "0.29"
+derive-new = "0.7"
+diesel = { version = "2", features = [
   "sqlite",
   "chrono",
   "returning_clauses_for_sqlite_3_35",
   "r2d2",
 ] }
 dotenvy = "0.15"
-rand = "0.9.0"
+rand = "0.10"
 serde = { version = "1.0", features = ["derive"] }
-strum = "0.25"
-strum_macros = "0.25"
-thiserror = "1.0.64"
-
-
-[profile.dev]
-opt-level = 0
-debug = true
-rpath = false
-lto = false
-debug-assertions = true
-codegen-units = 1
-
-
-[profile.release]
-strip = true
-opt-level = 3
-debug = false
-rpath = false
-lto = true
-debug-assertions = false
-codegen-units = 1
-
-
-[profile.test]
-opt-level = 3
-debug = false
-rpath = false
-lto = false
-debug-assertions = false
-codegen-units = 1
+strum = "0.28"
+strum_macros = "0.28"
+thiserror = "2"
