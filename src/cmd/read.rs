@@ -1,23 +1,20 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 use anyhow::{Context, Result as anyResult};
-use std::io::{self, Write, stdin, stdout};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-use crate::util::error::CoyoteError;
+use std::io::{Write, stdin, stdout};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 use crate::custom::cards::Card;
 use crate::custom::language::Language;
 use crate::custom::level::Level;
-use crate::util::sql::{insert_struct, set_conn_db};
+use crate::util::error::CoyoteError;
+use crate::util::sql;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub fn read(lang: Option<String>) -> anyResult<()> {
-    let mut conn = set_conn_db()?;
+pub fn run(lang: Option<String>) -> anyResult<()> {
+    let mut conn = sql::set_conn_db()?;
     let mut card = Card::new();
 
     // Determine default language from argument or fallback to English
@@ -89,7 +86,7 @@ pub fn read(lang: Option<String>) -> anyResult<()> {
         Language::try_from(lang_str).map_err(|e| anyhow::anyhow!("{}", e))?
     };
 
-    insert_struct(card, &mut conn)?;
+    sql::insert_struct(card, &mut conn)?;
     println!("Card added successfully.");
     Ok(())
 }

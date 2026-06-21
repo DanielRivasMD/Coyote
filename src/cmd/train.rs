@@ -5,21 +5,20 @@ use colored::*;
 use crossterm::event::{self, Event, KeyCode};
 use crossterm::terminal::{self};
 use diesel::SqliteConnection;
-use rand::{Rng, rng, seq::SliceRandom};
+use rand::{RngExt, rng, seq::SliceRandom};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use crate::{custom::language::Language, util::error::CoyoteError};
+use crate::custom::fields::Fields;
+use crate::custom::language::Language;
+use crate::util::error::CoyoteError;
+use crate::util::sql;
+use crate::{TRAIN_FAILURE, TRAIN_SUCCESS};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use crate::util::sql::set_conn_db;
-use crate::{TRAIN_FAILURE, TRAIN_SUCCESS, custom::fields::Fields, util::sql::get_memory};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-pub fn train(lang: String) -> anyResult<()> {
-    let conn = &mut set_conn_db()?;
+pub fn run(lang: String) -> anyResult<()> {
+    let conn = &mut sql::set_conn_db()?;
     training(conn, Language::try_from(lang).unwrap())?;
     Ok(())
 }
@@ -29,7 +28,7 @@ pub fn train(lang: String) -> anyResult<()> {
 #[rustfmt::skip]
 fn training(conn: &mut SqliteConnection, lang: Language) -> anyResult<()> {
   // retrieve from database
-  let mut cards = get_memory(conn, &lang.to_string(), "A1")?;
+  let mut cards = sql::get_memory(conn, &lang.to_string(), "A1")?;
 
   // create random number generator
   let mut rng = rng();

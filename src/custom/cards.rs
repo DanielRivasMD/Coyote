@@ -6,15 +6,12 @@ use serde::{Deserialize, Serialize};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use crate::util::error::CoyoteError;
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 use crate::custom::fields::Fields;
 use crate::custom::language::Language;
 use crate::custom::level::Level;
 use crate::custom::schema::memory::{self as memory_table, dsl::*};
 use crate::daedalus;
+use crate::util::error::CoyoteError;
 use crate::util::time::diff_date;
 use crate::util::{
     time::{current_date, delta_date},

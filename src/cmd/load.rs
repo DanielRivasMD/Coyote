@@ -8,13 +8,13 @@ use std::path::PathBuf;
 
 use crate::custom::cards::Card;
 use crate::custom::language::Language;
-use crate::util::io::byte_read_io;
-use crate::util::sql::{insert_struct, set_conn_db};
+use crate::util::io;
+use crate::util::sql;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub fn load(input: &PathBuf, lang: String) -> anyResult<()> {
-    let conn = set_conn_db()?;
+pub fn run(input: &PathBuf, lang: String) -> anyResult<()> {
+    let conn = sql::set_conn_db()?;
     read_load(conn, input.to_path_buf(), Language::try_from(lang).unwrap())?;
     Ok(())
 }
@@ -22,7 +22,7 @@ pub fn load(input: &PathBuf, lang: String) -> anyResult<()> {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fn read_load(mut conn: SqliteConnection, file: PathBuf, lang: Language) -> anyResult<()> {
-    let mut lines = byte_read_io(file)?;
+    let mut lines = io::byte_read_io(file)?;
 
     // Read the header line
     let header_line = match lines.next() {
@@ -100,7 +100,7 @@ fn read_load(mut conn: SqliteConnection, file: PathBuf, lang: Language) -> anyRe
         }
 
         println!("{:?}", card);
-        insert_struct(card, &mut conn)?;
+        sql::insert_struct(card, &mut conn)?;
     }
 
     Ok(())
